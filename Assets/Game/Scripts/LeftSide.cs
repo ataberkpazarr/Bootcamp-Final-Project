@@ -2,9 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Side : MonoBehaviour
+public class LeftSide : MonoBehaviour
 {
-    private List<GameObject> suitcases;
+    private List<GameObject> leftSideSuitcases;
 
     void Start()
     {
