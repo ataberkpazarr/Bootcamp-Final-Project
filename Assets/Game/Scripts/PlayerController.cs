@@ -26,8 +26,8 @@ public class PlayerController : MonoBehaviour
 
     private void MoveForward()
     {
-        //transform.Translate(Vector3.forward * speed * Time.deltaTime);
-        transform.DOMove(transform.position+transform.forward,1f);
+        transform.Translate(Vector3.forward * speed * Time.deltaTime);
+        //transform.DOMove(transform.position+transform.forward,1f);
     }
 
     private void OnEnable()

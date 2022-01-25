@@ -3,21 +3,22 @@ using System;
 
 public class SwipeManager : MonoBehaviour
 {
-    public static bool tap, swipeLeft, swipeRight, swipeUp, swipeDown;
+    private bool tap, swipeLeft, swipeRight;
     private bool isDraging = false;
     private Vector2 startTouch, swipeDelta;
 
-    public static Action rightSwiped;
-    public static Action leftSwiped;
-    public static Action dragStopped;
-    public static Action dragStarted;
-
-
+    public static Action rightSwiped, leftSwiped, dragStopped, dragStarted;
 
 
     private void Update()
     {
-        tap = swipeDown = swipeUp = swipeLeft = swipeRight = false;
+        HandleWithInput();
+    }
+
+    private void HandleWithInput()
+    {
+        tap = swipeLeft = swipeRight = false;
+
         #region Standalone Inputs
         if (Input.GetMouseButtonDown(0))
         {
@@ -66,34 +67,21 @@ public class SwipeManager : MonoBehaviour
         {
             //Which direction?
             float x = swipeDelta.x;
-            float y = swipeDelta.y;
-            if (Mathf.Abs(x) > Mathf.Abs(y))
+            //Left or Right
+            if (x < 0)
             {
-                //Left or Right
-                if (x < 0)
-                {
-                    swipeLeft = true;
-                    leftSwiped.Invoke();
-                }
-                else
-                {
-                    swipeRight = true;
-                    rightSwiped.Invoke();
-
-                }
+                swipeLeft = true;
+                leftSwiped.Invoke();
             }
             else
             {
-                //Up or Down
-                if (y < 0)
-                    swipeDown = true;
-                else
-                    swipeUp = true;
+                swipeRight = true;
+                rightSwiped.Invoke();
+
             }
 
             Reset();
         }
-
     }
 
     private void Reset()
