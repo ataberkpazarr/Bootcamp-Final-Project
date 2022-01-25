@@ -9,6 +9,10 @@ public class SwipeManager : MonoBehaviour
 
     public static Action rightSwiped;
     public static Action leftSwiped;
+    public static Action dragStopped;
+    public static Action dragStarted;
+
+
 
 
     private void Update()
@@ -17,13 +21,14 @@ public class SwipeManager : MonoBehaviour
         #region Standalone Inputs
         if (Input.GetMouseButtonDown(0))
         {
-
+            dragStarted.Invoke();
             tap = true;
             isDraging = true;
             startTouch = Input.mousePosition;
         }
         else if (Input.GetMouseButtonUp(0))
         {
+            dragStopped.Invoke();
             isDraging = false;
             Reset();
         }
@@ -95,5 +100,6 @@ public class SwipeManager : MonoBehaviour
     {
         startTouch = swipeDelta = Vector2.zero;
         isDraging = false;
+       
     }
 }
