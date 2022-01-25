@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using DG.Tweening;
 
-public class ShuffleManager : MonoBehaviour
+public class ShuffleManager : Singleton<ShuffleManager>
 {
     [SerializeField]private List<GameObject> leftSideSuitcases;
     [SerializeField] private List<GameObject> rightSideSuitcases;
@@ -11,6 +11,9 @@ public class ShuffleManager : MonoBehaviour
 
     [SerializeField] private GameObject leftSideSuitcasesRoot;
     [SerializeField] private GameObject rightSideSuitcasesRoot;
+
+    [SerializeField] private LeftSide sideLeft;
+    //[SerializeField] private RightSide sideRight;
 
     private bool isDragStopoped;
 
@@ -77,8 +80,8 @@ public class ShuffleManager : MonoBehaviour
 
             
             Sequence seq = DOTween.Sequence();
-            seq.Append(g.transform.DOMoveX(newPos.x, 0.5f).SetEase(Ease.InBack));
-            seq.Join(g.transform.DOMoveY(newPos.y, 0.5f).SetEase(Ease.InBack));
+            seq.Append(g.transform.DOMoveX(newPos.x, 0.5f).SetEase(Ease.OutBack));
+            seq.Join(g.transform.DOMoveY(newPos.y, 0.5f).SetEase(Ease.OutBack));
             //g.transform.Rotate(new Vector3(360,360,360)*Time.deltaTime);
             //g.transform.RotateAround(g.transform.position,g.transform.up,360*Time.deltaTime);
 
@@ -95,6 +98,7 @@ public class ShuffleManager : MonoBehaviour
             }
 
             seq.Play().OnComplete(MoveFromLeftToRight);
+        
 
         }
     }
@@ -122,8 +126,8 @@ public class ShuffleManager : MonoBehaviour
 
 
             Sequence seq = DOTween.Sequence();
-            seq.Append(g.transform.DOMoveX(newPos.x, 0.5f).SetEase(Ease.InBack));
-            seq.Join(g.transform.DOMoveY(newPos.y, 0.5f).SetEase(Ease.InBack));
+            seq.Append(g.transform.DOMoveX(newPos.x, 0.5f).SetEase(Ease.OutBack));
+            seq.Join(g.transform.DOMoveY(newPos.y, 0.5f).SetEase(Ease.OutBack));
 
 
             if (leftSideSuitcases.Count > 0)
@@ -136,6 +140,7 @@ public class ShuffleManager : MonoBehaviour
                 leftSideSuitcases.Add(g);
             }
             seq.Play().OnComplete(MoveFromRightToLeft);
+            
 
         }
     }
