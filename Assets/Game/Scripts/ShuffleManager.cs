@@ -77,8 +77,8 @@ public class ShuffleManager : MonoBehaviour
 
             
             Sequence seq = DOTween.Sequence();
-            seq.Append(g.transform.DOMoveX(newPos.x, 0.5f));
-            seq.Join(g.transform.DOMoveY(newPos.y, 0.5f));
+            seq.Append(g.transform.DOMoveX(newPos.x, 0.5f).SetEase(Ease.InBack));
+            seq.Join(g.transform.DOMoveY(newPos.y, 0.5f).SetEase(Ease.InBack));
             //g.transform.Rotate(new Vector3(360,360,360)*Time.deltaTime);
             //g.transform.RotateAround(g.transform.position,g.transform.up,360*Time.deltaTime);
 
@@ -122,8 +122,8 @@ public class ShuffleManager : MonoBehaviour
 
 
             Sequence seq = DOTween.Sequence();
-            seq.Append(g.transform.DOMoveX(newPos.x, 0.5f));
-            seq.Join(g.transform.DOMoveY(newPos.y, 0.5f));
+            seq.Append(g.transform.DOMoveX(newPos.x, 0.5f).SetEase(Ease.InBack));
+            seq.Join(g.transform.DOMoveY(newPos.y, 0.5f).SetEase(Ease.InBack));
 
 
             if (leftSideSuitcases.Count > 0)
