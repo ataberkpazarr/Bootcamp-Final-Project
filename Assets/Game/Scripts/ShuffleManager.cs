@@ -50,13 +50,12 @@ public class ShuffleManager : MonoBehaviour
 
     private void HandleRightSlide()
     {
-        //while (!isDragStopoped)
-       // {
+     
             MoveFromLeftToRight();
 
-       // }
+      
     }
-
+    
 
     private void MoveFromLeftToRight()
     {
@@ -96,13 +95,6 @@ public class ShuffleManager : MonoBehaviour
             }
 
             seq.Play().OnComplete(MoveFromLeftToRight);
-
-            /*
-            if (!isDragStopoped)
-            {
-                MoveFromLeftToRight();
-            }*/
-
 
         }
     }
@@ -144,12 +136,6 @@ public class ShuffleManager : MonoBehaviour
                 leftSideSuitcases.Add(g);
             }
             seq.Play().OnComplete(MoveFromRightToLeft);
-
-            /*
-           if (!isDragStopoped)
-            {
-               MoveFromRightToLeft();
-            }*/
 
         }
     }
