@@ -18,9 +18,18 @@ public class ShuffleManager : Singleton<ShuffleManager>
     [SerializeField] private Transform tweenParabolaVertex;
     [SerializeField] [Range(0f, 1f)] private float animationSpeed = 0.25f;
     [SerializeField] private LeftSide sideLeft;
+    [SerializeField] private GameObject suitcaseItself;
+
     //[SerializeField] private RightSide sideRight;
 
     private bool isDragStopoped;
+    private bool isLeftDragStopped;
+    private bool isRightDragStopped;
+
+    // bug fixers
+    private GameObject currentShufflingObject;
+    private float currentObjectEulerZ;
+    private Sequence leftParabolaSeq, rightPrabolaSeq;
 
 
     private void OnEnable()
@@ -29,6 +38,9 @@ public class ShuffleManager : Singleton<ShuffleManager>
         SwipeManager.leftSwiped += HandleLeftSlide;
         SwipeManager.dragStopped += StopShuffle;
         SwipeManager.dragStarted += StartShuffle;
+        SwipeManager.leftDragStopped += StopLeftShuffle;
+        SwipeManager.rightDragStopped += StopRightShuffle;
+
     }
 
     private void Start()
@@ -47,7 +59,7 @@ public class ShuffleManager : Singleton<ShuffleManager>
     private void StopShuffle()
     {
         isDragStopoped = true;
-        Debug.Log("aaa");
+        //currentShufflingObject = null;
     }
 
     private void StartShuffle()
@@ -57,78 +69,169 @@ public class ShuffleManager : Singleton<ShuffleManager>
 
     private void HandleRightSlide()
     {
+        isRightDragStopped = false;
         MoveFromLeftToRight();
     }
-    
+
+    private void StopLeftShuffle()
+    {
+        isLeftDragStopped = true;
+    }
+
+
+    private void StopRightShuffle()
+    {
+        isRightDragStopped = true;
+    }
+
 
     private void MoveFromLeftToRight()
     {
-        if (leftSideSuitcases.Count > 0 && !isDragStopoped)
+        //if (leftSideSuitcases.Count > 0 && !isDragStopoped)
+        if (leftSideSuitcases.Count > 0 && !isRightDragStopped)
         {
+            rightPrabolaSeq.Kill();
+
             UpdateParabolaVertexPos();
 
-            GameObject g = leftSideSuitcases.Last();
-            leftSideSuitcases.Remove(g); // last in first out logic
+            if(!leftSideSuitcases.Contains(currentShufflingObject))// hareket ettirilecek obje havadaki obje değilse
+            {
+                currentObjectEulerZ = leftSideSuitcases.Last().transform.eulerAngles.z;
+            }
+
+            currentShufflingObject = leftSideSuitcases.Last();
+            leftSideSuitcases.Remove(currentShufflingObject); // last in first out logic
 
             // setting the suitcase's new position on the other stack
             Vector3 newPos = rightSideSuitcasesRoot.transform.position;
             newPos.y += suitcaseDeltaPosY * (rightSideSuitcases.Count + 1);
 
             // parabolic transfer animation
-            Sequence parabolaSeq = DOTween.Sequence();
-            parabolaSeq.Append(g.transform.DOMoveX(tweenParabolaVertex.position.x, animationSpeed)
+            leftParabolaSeq = DOTween.Sequence();
+            leftParabolaSeq.Append(currentShufflingObject.transform.DOMoveX(tweenParabolaVertex.position.x, animationSpeed)
                 .SetEase(Ease.InQuad)
-                .OnComplete(() => { g.transform.DOMoveX(newPos.x, animationSpeed).SetEase(Ease.OutQuad); }));
-            parabolaSeq.Join(g.transform.DOMoveY(tweenParabolaVertex.position.y, animationSpeed)
+                .OnComplete(() => { currentShufflingObject?.transform.DOMoveX(newPos.x, animationSpeed).SetEase(Ease.OutQuad); }));
+            leftParabolaSeq.Join(currentShufflingObject.transform.DOMoveY(tweenParabolaVertex.position.y, animationSpeed)
                 .SetEase(Ease.OutQuad)
-                .OnComplete(() => { g.transform.DOMoveY(newPos.y, animationSpeed).SetEase(Ease.InQuad);
+                .OnComplete(() => {
+                    currentShufflingObject?.transform.DOMoveY(newPos.y, animationSpeed).SetEase(Ease.InQuad);
                 }));
-            parabolaSeq.Join(g.transform.DORotate(new Vector3(0, 0, g.transform.rotation.eulerAngles.z - 180), animationSpeed * 2)
-                .OnComplete(() => { parabolaSeq.Join(g.transform.DOPunchScale(Vector3.one / 2, 0.25f, 2, 0.5f)); }));
-            
+            leftParabolaSeq.Join(currentShufflingObject.transform.DORotate(new Vector3(0, 0, currentObjectEulerZ - 180), animationSpeed * 2)
+                .SetEase(Ease.InOutQuad)
+                .OnComplete(() => { currentShufflingObject.transform.DOPunchScale(Vector3.one / 2, 0.25f, 2, 0.5f); })
+                );
+            //.OnComplete(() => { parabolaSeq.Join(g.transform.DOPunchScale(Vector3.one / 2, 0.25f, 2, 0.5f)).OnStepComplete(() => FixScaleAndRotationOfNewJoinedSuitcase(g)); }));
+            //.OnComplete(() => { parabolaSeq.Join(g.transform.DOPunchScale(Vector3.one / 2, 0.25f, 2, 0.5f)).OnStepComplete(() => { parabolaSeq.Join(g.transform.DORotateQuaternion(Quaternion.identity, animationSpeed)); }); }));
+
+            //parabolaSeq.Join(g.transform.DORotate(new Vector3(0, 0, g.transform.rotation.eulerAngles.z - 180), animationSpeed * 2)
+            //    .OnComplete(() => { parabolaSeq.Join(g.transform.DOPunchScale(Vector3.one / 2, 0.25f, 2, 0.5f)); }));
+            /////////parabolaSeq.Join(g.transform.DORotate(new Vector3(0, 0, g.transform.rotation.eulerAngles.z - 180), animationSpeed * 2));
+            //.OnComplete(() => { parabolaSeq.Join(g.transform.DOPunchScale(Vector3.one / 2, 0.25f, 2, 0.5f)); }));
+
             //g.transform.Rotate(new Vector3(360,360,360)*Time.deltaTime);
             //g.transform.RotateAround(g.transform.position,g.transform.up,360*Time.deltaTime);
 
-            rightSideSuitcases.Add(g);
+            rightSideSuitcases.Add(currentShufflingObject);
 
-            parabolaSeq.Play().OnComplete(MoveFromLeftToRight);
+            leftParabolaSeq.Play().OnComplete(MoveFromLeftToRight);
+            //parabolaSeq.Play().OnComplete(() => StartCoroutine(LeftToRightRoutine()));
+            //parabolaSeq.Play();
+
+
         }
+    }
+
+    private void FixScaleAndRotationOfNewJoinedSuitcase(GameObject g, float f)
+    {
+
+        //Sequence fixSequence = DOTween.Sequence();
+        //fixSequence.Append(g.transform.DOPunchScale(Vector3.one / 2, animationSpeed, 2, 0.5f));
+        ////fixSequence.Append(g.transform.DOShakeScale(1f));
+        //fixSequence.AppendInterval(0.01f);
+        //
+        //fixSequence.Join(g.transform.DORotate(new Vector3(0, 0, (f - g.transform.rotation.eulerAngles.z)), animationSpeed * 2.5f));
+        //
+        //
+        //
+        //
+        ////fixSequence.Join(g.transform.DORotate(new Vector3(0,0,180-g.transform.rotation.eulerAngles.z),animationSpeed*2));
+        ////fixSequence.Join(g.transform.DORotate(new Vector3(0,0,180-g.transform.rotation.eulerAngles.z),animationSpeed*2));
+        ////fixSequence.Join(g.transform.DORotateQuaternion(Quaternion.identity, animationSpeed*2));
+        //
+        ////fixSequence.Join(g.transform.DORotateQuaternion(suitcaseItself.transform.rotation, animationSpeed/2));
+        //fixSequence.Join(g.transform.DOScale(new Vector3(1, 1, 1), animationSpeed * 2));
+        //fixSequence.Play();
+
     }
 
     private void MoveFromRightToLeft()
     {
-        if (rightSideSuitcases.Count > 0 && !isDragStopoped)
+        //if (rightSideSuitcases.Count > 0 && !isDragStopoped)
+        if (rightSideSuitcases.Count > 0 && !isLeftDragStopped)
         {
+            leftParabolaSeq.Kill();
+
             UpdateParabolaVertexPos();
 
-            GameObject g = rightSideSuitcases.Last();
-            rightSideSuitcases.Remove(g); // last in first out logic
+            if (!rightSideSuitcases.Contains(currentShufflingObject))
+            {
+                currentObjectEulerZ = rightSideSuitcases.Last().transform.eulerAngles.z;
+            }
+
+            currentShufflingObject = rightSideSuitcases.Last();
+            rightSideSuitcases.Remove(currentShufflingObject); // last in first out logic
 
             // setting the suitcase's new position on the other stack
             Vector3 newPos = leftSideSuitcasesRoot.transform.position;
             newPos.y += suitcaseDeltaPosY * (leftSideSuitcases.Count + 1);
 
             // parabolic transfer animation
-            Sequence parabolaSeq = DOTween.Sequence();
-            parabolaSeq.Append(g.transform.DOMoveX(tweenParabolaVertex.position.x, animationSpeed)
+            rightPrabolaSeq = DOTween.Sequence();
+            rightPrabolaSeq.Append(currentShufflingObject.transform.DOMoveX(tweenParabolaVertex.position.x, animationSpeed)
                 .SetEase(Ease.InQuad)
-                .OnComplete(() => { g.transform.DOMoveX(newPos.x, animationSpeed).SetEase(Ease.OutQuad); }));
-            parabolaSeq.Join(g.transform.DOMoveY(tweenParabolaVertex.position.y, animationSpeed)
+                .OnComplete(() => { currentShufflingObject?.transform.DOMoveX(newPos.x, animationSpeed).SetEase(Ease.OutQuad); }));
+            rightPrabolaSeq.Join(currentShufflingObject.transform.DOMoveY(tweenParabolaVertex.position.y, animationSpeed)
                 .SetEase(Ease.OutQuad)
                 .OnComplete(() => {
-                    g.transform.DOMoveY(newPos.y, animationSpeed).SetEase(Ease.InQuad);
+                    currentShufflingObject?.transform.DOMoveY(newPos.y, animationSpeed).SetEase(Ease.InQuad);
                 }));
-            parabolaSeq.Join(g.transform.DORotate(new Vector3(0, 0, g.transform.rotation.eulerAngles.z + 180), animationSpeed * 2)
-                .OnComplete(() => { parabolaSeq.Join(g.transform.DOPunchScale(Vector3.one / 2, 0.25f, 2, 0.5f)); }));
+            rightPrabolaSeq.Join(currentShufflingObject.transform.DORotate(new Vector3(0, 0, currentObjectEulerZ + 180), animationSpeed * 2)
+                .SetEase(Ease.InOutQuad)
+                .OnComplete(() => { currentShufflingObject.transform.DOPunchScale(Vector3.one / 2, 0.25f, 2, 0.5f); })
+                ); ;
+            //.OnComplete(() => { parabolaSeq.Join(g.transform.DOPunchScale(Vector3.one / 2, 0.25f, 2, 0.5f)).OnStepComplete(() => FixScaleAndRotationOfNewJoinedSuitcase(g)); }));
+            //.OnComplete(() => { parabolaSeq.Join(g.transform.DOPunchScale(Vector3.one / 2, 0.25f, 2, 0.5f)).OnStepComplete(() => { parabolaSeq.Join(g.transform.DORotateQuaternion(Quaternion.identity, animationSpeed)); }); }));
 
-            leftSideSuitcases.Add(g);
 
-            parabolaSeq.Play().OnComplete(MoveFromRightToLeft);
+
+            //parabolaSeq.Join(g.transform.DORotate(new Vector3(0, 0, g.transform.rotation.eulerAngles.z + 180), animationSpeed * 2)
+            //   .OnComplete(() => { parabolaSeq.Join(g.transform.DORotateQuaternion(Quaternion.identity , animationSpeed * 2)); }));
+            //.OnComplete(() => { parabolaSeq.Join(g.transform.DORotate(new Vector3(0, 0, g.transform.rotation.eulerAngles.z + 180), animationSpeed * 2)); }));
+
+            leftSideSuitcases.Add(currentShufflingObject);
+            //parabolaSeq.Play();
+            rightPrabolaSeq.Play().OnComplete(() => {currentShufflingObject = null; MoveFromRightToLeft(); });
+            //parabolaSeq.Play().OnComplete(()=>StartCoroutine(RightToLeftRoutine()));
         }
+    }
+
+    private IEnumerator RightToLeftRoutine()
+    {
+        yield return new WaitForSeconds(1f);
+        MoveFromRightToLeft();
+
+    }
+
+    private IEnumerator LeftToRightRoutine()
+    {
+        yield return new WaitForSeconds(1f);
+        MoveFromLeftToRight();
+
     }
 
     private void HandleLeftSlide()
     {
+        isLeftDragStopped = false;
         MoveFromRightToLeft();
     }
 
@@ -139,5 +242,36 @@ public class ShuffleManager : Singleton<ShuffleManager>
         Vector3 newParabolaVertex = tweenParabolaVertex.position;
         newParabolaVertex.y = newPosY;
         tweenParabolaVertex.position = newParabolaVertex;
+    }
+
+    // denemede
+    public void AddSuitcase(Side side, int suitcaseAmount)
+    {       
+        if(side.transform.position.x < 0)// left side
+        {
+            for (int i = 0; i < suitcaseAmount; i++)
+            {
+                var newSuitcasePos = leftSideSuitcases.Last().transform.position;
+                newSuitcasePos.y += suitcaseDeltaPosY;
+                var newSuitcase = Instantiate(suitcase.gameObject, newSuitcasePos, Quaternion.identity);
+                newSuitcase.transform.SetParent(side.transform.parent);
+                leftSideSuitcases.Add(newSuitcase);
+                //animation
+                newSuitcase.transform.DOPunchScale(Vector3.one / 2, 0.25f, 2, 0.5f);
+            }
+        }
+        else// right side
+        {
+            for (int i = 0; i < suitcaseAmount; i++)
+            {
+                var newSuitcasePos = rightSideSuitcases.Last().transform.position;
+                newSuitcasePos.y += suitcaseDeltaPosY;
+                var newSuitcase = Instantiate(suitcase.gameObject, newSuitcasePos, Quaternion.identity);
+                newSuitcase.transform.SetParent(side.transform.parent);
+                rightSideSuitcases.Add(newSuitcase);
+                //animation
+                newSuitcase.transform.DOPunchScale(Vector3.one / 2, 0.25f, 2, 0.5f);
+            }
+        }
     }
 }
