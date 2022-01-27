@@ -94,9 +94,9 @@ public class ShuffleManager : Singleton<ShuffleManager>
 
             UpdateParabolaVertexPos();
 
-            if(!leftSideSuitcases.Contains(currentShufflingObject))// hareket ettirilecek obje havadaki obje değilse
+            if(currentShufflingObject != leftSideSuitcases.Last())// hareket ettirilecek obje havadaki obje değilse
             {
-                currentObjectEulerZ = leftSideSuitcases.Last().transform.eulerAngles.z;
+                currentObjectEulerZ = leftSideSuitcases.Last().transform.eulerAngles.z;// hareket ettirilecek objenin ilk Z rotation ını al
             }
 
             currentShufflingObject = leftSideSuitcases.Last();
@@ -173,7 +173,7 @@ public class ShuffleManager : Singleton<ShuffleManager>
 
             UpdateParabolaVertexPos();
 
-            if (!rightSideSuitcases.Contains(currentShufflingObject))
+            if (currentShufflingObject != rightSideSuitcases.Last())
             {
                 currentObjectEulerZ = rightSideSuitcases.Last().transform.eulerAngles.z;
             }
@@ -244,6 +244,7 @@ public class ShuffleManager : Singleton<ShuffleManager>
         tweenParabolaVertex.position = newParabolaVertex;
     }
 
+    #region Gate Methods
     // denemede
     public void AddSuitcase(Side side, int suitcaseAmount)
     {       
@@ -251,9 +252,36 @@ public class ShuffleManager : Singleton<ShuffleManager>
         {
             for (int i = 0; i < suitcaseAmount; i++)
             {
-                var newSuitcasePos = leftSideSuitcases.Last().transform.position;
+                Vector3 newSuitcasePos;
+                if(leftSideSuitcases.Count > 0)
+                {
+                    if(leftSideSuitcases.Last() == currentShufflingObject)// stack'in sonundaki obje havada ise
+                    {
+                        
+                        if(leftSideSuitcases.Count == 1)// eğer stack'te havada olandan başka bir obje yok ise root a göre konumla
+                        {
+                            newSuitcasePos = leftSideSuitcasesRoot.transform.position;
+                            newSuitcasePos.y += suitcaseDeltaPosY;
+                        }
+                        else // havada olan objenin bir öncekisini al
+                        {
+                            newSuitcasePos = leftSideSuitcases[leftSideSuitcases.Count - 2].transform.position;
+                            newSuitcasePos.y += suitcaseDeltaPosY;
+                        }
+                    }
+                    else
+                    {
+                        newSuitcasePos = leftSideSuitcases.Last().transform.position;
+                    }
+                }
+                else
+                {
+                    newSuitcasePos = leftSideSuitcasesRoot.transform.position;
+                }
+                
                 newSuitcasePos.y += suitcaseDeltaPosY;
-                var newSuitcase = Instantiate(suitcase.gameObject, newSuitcasePos, Quaternion.identity);
+                var newSuitcase = ObjectPool.Instance.GetObject(newSuitcasePos);
+                newSuitcase.SetActive(true);
                 newSuitcase.transform.SetParent(side.transform.parent);
                 leftSideSuitcases.Add(newSuitcase);
                 //animation
@@ -264,9 +292,36 @@ public class ShuffleManager : Singleton<ShuffleManager>
         {
             for (int i = 0; i < suitcaseAmount; i++)
             {
-                var newSuitcasePos = rightSideSuitcases.Last().transform.position;
+                Vector3 newSuitcasePos;
+                if (rightSideSuitcases.Count > 0)
+                {
+                    if (rightSideSuitcases.Last() == currentShufflingObject)// stack'in sonundaki obje havada ise
+                    {
+
+                        if (rightSideSuitcases.Count == 1)// eğer stack'te havada olandan başka bir obje yok ise root a göre konumla
+                        {
+                            newSuitcasePos = rightSideSuitcasesRoot.transform.position;
+                            newSuitcasePos.y += suitcaseDeltaPosY;
+                        }
+                        else // havada olan objenin bir öncekisini al
+                        {
+                            newSuitcasePos = rightSideSuitcases[rightSideSuitcases.Count - 2].transform.position;
+                            newSuitcasePos.y += suitcaseDeltaPosY;
+                        }
+                    }
+                    else
+                    {
+                        newSuitcasePos = rightSideSuitcases.Last().transform.position;
+                    }
+                }
+                else
+                {
+                    newSuitcasePos = rightSideSuitcasesRoot.transform.position;
+                }
+
                 newSuitcasePos.y += suitcaseDeltaPosY;
-                var newSuitcase = Instantiate(suitcase.gameObject, newSuitcasePos, Quaternion.identity);
+                var newSuitcase = ObjectPool.Instance.GetObject(newSuitcasePos);
+                newSuitcase.SetActive(true);
                 newSuitcase.transform.SetParent(side.transform.parent);
                 rightSideSuitcases.Add(newSuitcase);
                 //animation
@@ -274,4 +329,31 @@ public class ShuffleManager : Singleton<ShuffleManager>
             }
         }
     }
+
+    public void RemoveSuitcase(Side side, int suitcaseAmount)
+    {
+        if (side.transform.position.x < 0)// left side
+        {
+            int suitcasesOldTopIndex = leftSideSuitcases.Count - 1;
+            int suitcasesNewTopIndex = leftSideSuitcases.Count - suitcaseAmount;
+
+            for (int i = suitcasesOldTopIndex; i > suitcasesNewTopIndex; i--)
+            {
+                leftSideSuitcases[i].SetActive(false);// pool a geri dön
+                leftSideSuitcases.RemoveAt(i);
+            }
+        }
+        else// right side
+        {
+            int suitcasesOldTopIndex = rightSideSuitcases.Count - 1;
+            int suitcasesNewTopIndex = rightSideSuitcases.Count - suitcaseAmount;
+            
+            for (int i = suitcasesOldTopIndex; i > suitcasesNewTopIndex; i--)
+            {
+                rightSideSuitcases[i].SetActive(false);
+                rightSideSuitcases.RemoveAt(i);
+            }
+        }
+    }
+    #endregion
 }

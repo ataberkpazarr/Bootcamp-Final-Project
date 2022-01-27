@@ -10,5 +10,10 @@ public class Side : MonoBehaviour
         {
             ShuffleManager.Instance.AddSuitcase(this, 5);
         }
+
+        if(other.name == "NegativeGate")
+        {
+            ShuffleManager.Instance.RemoveSuitcase(this, 5);
+        }
     }
 }
