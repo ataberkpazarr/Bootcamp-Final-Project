@@ -8,9 +8,6 @@ public class PlayerController : MonoBehaviour
 {
     [Header("Specs")]
     [SerializeField] private float speed = 5f;
-    [Header("Sides")]
-    [SerializeField] private LeftSide sideLeft;
-    [SerializeField] private RightSide sideRight;
 
     // inputs
     private Vector3 mouseRootPos;

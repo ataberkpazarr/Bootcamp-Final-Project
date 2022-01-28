@@ -33,7 +33,7 @@ public class SwipeManager : MonoBehaviour
                 startTouch = Input.mousePosition;
                
             }
-            if (Input.GetMouseButton(0))
+            else if (Input.GetMouseButton(0))
             {
                 swipeDelta = (Vector2)Input.mousePosition - startTouch;
             }
@@ -45,21 +45,21 @@ public class SwipeManager : MonoBehaviour
             //Did we cross the distance?
             if (swipeDelta.magnitude > 150)
             {
-                //Which direction?
-                float x = swipeDelta.x;
-                //Left or Right
-                if (x < 0)
-                {
-                    leftSwiped.Invoke();
-                    //StartCoroutine(LeftSwipeInvokeRoutine());
-                    swipeLeft = true;
-                }
-                else
-                {
-                    rightSwiped.Invoke();
-                    //StartCoroutine(RightSwipeInvokeRoutine());
-                    swipeRight = true;
-                }
+                ////Which direction?
+                //float x = swipeDelta.x;
+                ////Left or Right
+                //if (x < 0)
+                //{
+                //    leftSwiped.Invoke();
+                //    //StartCoroutine(LeftSwipeInvokeRoutine());
+                //    swipeLeft = true;
+                //}
+                //else
+                //{
+                //    rightSwiped.Invoke();
+                //    //StartCoroutine(RightSwipeInvokeRoutine());
+                //    swipeRight = true;
+                //}
                 firstTouch = false;
                 Reset();
             }
@@ -103,8 +103,7 @@ public class SwipeManager : MonoBehaviour
         }
 
         if (Input.GetMouseButtonUp(0))
-        {
-        
+        {        
             rightDragStopped?.Invoke();
             leftDragStopped?.Invoke();
             alreadyInvokedRight = false;

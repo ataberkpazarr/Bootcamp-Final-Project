@@ -2695,7 +2695,6 @@ MonoBehaviour:
   suitcase: {fileID: 391013013, guid: 83db33b110f924e63b082e753e6a77a0, type: 3}
   tweenParabolaVertex: {fileID: 40647193}
   animationSpeed: 0.1
-  sideLeft: {fileID: 0}
   suitcaseItself: {fileID: 0}
 --- !u!4 &1378825421
 Transform:
@@ -2805,8 +2804,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   speed: 5
-  sideLeft: {fileID: 0}
-  sideRight: {fileID: 0}
 --- !u!54 &1488052952
 Rigidbody:
   m_ObjectHideFlags: 0

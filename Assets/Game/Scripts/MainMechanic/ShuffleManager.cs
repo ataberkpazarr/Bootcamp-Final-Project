@@ -13,11 +13,10 @@ public class ShuffleManager : Singleton<ShuffleManager>
     [SerializeField] private GameObject rightSideSuitcasesRoot;
     [Header("Suitcase")]
     [SerializeField] private BoxCollider suitcase;
-    private float suitcaseDeltaPosY => suitcase.size.y;
+    private float SuitcaseDeltaPosY => suitcase.size.y;
     [Header("Tween Components")]
     [SerializeField] private Transform tweenParabolaVertex;
     [SerializeField] [Range(0f, 1f)] private float animationSpeed = 0.25f;
-    [SerializeField] private LeftSide sideLeft;
     [SerializeField] private GameObject suitcaseItself;
 
     //[SerializeField] private RightSide sideRight;
@@ -104,11 +103,11 @@ public class ShuffleManager : Singleton<ShuffleManager>
 
             // setting the suitcase's new position on the other stack
             Vector3 newPos = rightSideSuitcasesRoot.transform.position;
-            newPos.y += suitcaseDeltaPosY * (rightSideSuitcases.Count + 1);
+            newPos.y += SuitcaseDeltaPosY * (rightSideSuitcases.Count + 1);
 
             // parabolic transfer animation
             leftParabolaSeq = DOTween.Sequence();
-            /*
+            
             leftParabolaSeq.Append(currentShufflingObject.transform.DOMoveX(tweenParabolaVertex.position.x, animationSpeed)
                 .SetEase(Ease.InQuad)
                 .OnComplete(() => { currentShufflingObject?.transform.DOMoveX(newPos.x, animationSpeed).SetEase(Ease.OutQuad); }));
@@ -117,15 +116,16 @@ public class ShuffleManager : Singleton<ShuffleManager>
                 .OnComplete(() => {
                     currentShufflingObject?.transform.DOMoveY(newPos.y, animationSpeed).SetEase(Ease.InQuad);
                 }));
-            */
+            
             //leftParabolaSeq.Append(currentShufflingObject.transform.DOLocalJump(new Vector3(newPos.x, newPos.y, 0), 5, 1, animationSpeed));
-            leftParabolaSeq.Append(currentShufflingObject.transform.DOMoveX(tweenParabolaVertex.position.x, animationSpeed)
-                .SetEase(Ease.InQuad));
-            leftParabolaSeq.Join(currentShufflingObject.transform.DOMoveY(tweenParabolaVertex.position.y, animationSpeed)
-                .SetEase(Ease.OutQuad));
 
-            leftParabolaSeq.Append(currentShufflingObject?.transform.DOMoveX(newPos.x, animationSpeed).SetEase(Ease.OutQuad));
-            leftParabolaSeq.Join(currentShufflingObject?.transform.DOMoveY(newPos.y, animationSpeed).SetEase(Ease.InQuad));
+            //leftParabolaSeq.Append(currentShufflingObject.transform.DOMoveX(tweenParabolaVertex.position.x, animationSpeed)
+            //    .SetEase(Ease.InQuad));
+            //leftParabolaSeq.Join(currentShufflingObject.transform.DOMoveY(tweenParabolaVertex.position.y, animationSpeed)
+            //    .SetEase(Ease.OutQuad));
+            //
+            //leftParabolaSeq.Append(currentShufflingObject?.transform.DOMoveX(newPos.x, animationSpeed).SetEase(Ease.OutQuad));
+            //leftParabolaSeq.Join(currentShufflingObject?.transform.DOMoveY(newPos.y, animationSpeed).SetEase(Ease.InQuad));
 
 
 
@@ -202,11 +202,10 @@ public class ShuffleManager : Singleton<ShuffleManager>
 
             // setting the suitcase's new position on the other stack
             Vector3 newPos = leftSideSuitcasesRoot.transform.position;
-            newPos.y += suitcaseDeltaPosY * (leftSideSuitcases.Count + 1);
+            newPos.y += SuitcaseDeltaPosY * (leftSideSuitcases.Count + 1);
 
             // parabolic transfer animation
             rightPrabolaSeq = DOTween.Sequence();
-            /*
             rightPrabolaSeq.Append(currentShufflingObject.transform.DOMoveX(tweenParabolaVertex.position.x, animationSpeed)
                 .SetEase(Ease.InQuad)
                 .OnComplete(() => { currentShufflingObject?.transform.DOMoveX(newPos.x, animationSpeed).SetEase(Ease.OutQuad); }));
@@ -215,7 +214,6 @@ public class ShuffleManager : Singleton<ShuffleManager>
                 .OnComplete(() => {
                     currentShufflingObject?.transform.DOMoveY(newPos.y, animationSpeed).SetEase(Ease.InQuad);
                 }));
-            */
 
             /*
             rightPrabolaSeq.Append(currentShufflingObject.transform.DOLocalJump(new Vector3(newPos.x,newPos.y,0),5,1,animationSpeed));
@@ -225,13 +223,13 @@ public class ShuffleManager : Singleton<ShuffleManager>
                 ); ;
             */
 
-            rightPrabolaSeq.Append(currentShufflingObject.transform.DOMoveX(tweenParabolaVertex.position.x, animationSpeed)
-                .SetEase(Ease.InQuad));
-            rightPrabolaSeq.Join(currentShufflingObject.transform.DOMoveY(tweenParabolaVertex.position.y, animationSpeed)
-                .SetEase(Ease.OutQuad));
-
-            rightPrabolaSeq.Append(currentShufflingObject?.transform.DOMoveX(newPos.x, animationSpeed).SetEase(Ease.OutQuad));
-            rightPrabolaSeq.Join(currentShufflingObject?.transform.DOMoveY(newPos.y, animationSpeed).SetEase(Ease.InQuad));
+            //rightPrabolaSeq.Append(currentShufflingObject.transform.DOMoveX(tweenParabolaVertex.position.x, animationSpeed)
+            //    .SetEase(Ease.InQuad));
+            //rightPrabolaSeq.Join(currentShufflingObject.transform.DOMoveY(tweenParabolaVertex.position.y, animationSpeed)
+            //    .SetEase(Ease.OutQuad));
+            //
+            //rightPrabolaSeq.Append(currentShufflingObject?.transform.DOMoveX(newPos.x, animationSpeed).SetEase(Ease.OutQuad));
+            //rightPrabolaSeq.Join(currentShufflingObject?.transform.DOMoveY(newPos.y, animationSpeed).SetEase(Ease.InQuad));
 
             rightPrabolaSeq.Join(currentShufflingObject.transform.DORotate(new Vector3(0, 0, currentObjectEulerZ + 180), animationSpeed * 2)
                 .SetEase(Ease.InOutQuad)
@@ -250,7 +248,7 @@ public class ShuffleManager : Singleton<ShuffleManager>
             leftSideSuitcases.Add(currentShufflingObject);
             //parabolaSeq.Play();
             ///////////////////////////////////rightPrabolaSeq.Play().OnComplete(MoveFromRightToLeft).OnStepComplete(() => rightPrabolaSeq.Kill()); bu da mantıklı olabilir dursun
-            rightPrabolaSeq.Play().OnComplete(() => { currentShufflingObject = null; MoveFromRightToLeft(); });
+            rightPrabolaSeq.Play().OnComplete(MoveFromRightToLeft);
 
             //////////////////////////////////rightPrabolaSeq.Play().OnComplete(() => rightPrabolaSeq.Kill()).OnStepComplete(() => { currentShufflingObject = null; MoveFromRightToLeft(); });
             ///////////////rightPrabolaSeq.Play().OnComplete(() => { currentShufflingObject = null; MoveFromRightToLeft(); }).OnStepComplete(() => rightPrabolaSeq.Kill());
@@ -283,7 +281,7 @@ public class ShuffleManager : Singleton<ShuffleManager>
     private void UpdateParabolaVertexPos()
     {
         int maxLength = Mathf.Max(leftSideSuitcases.Count, rightSideSuitcases.Count);
-        float newPosY = maxLength * suitcaseDeltaPosY + 2f;
+        float newPosY = maxLength * SuitcaseDeltaPosY + 2f;
         Vector3 newParabolaVertex = tweenParabolaVertex.position;
         newParabolaVertex.y = newPosY;
         tweenParabolaVertex.position = newParabolaVertex;
@@ -306,12 +304,12 @@ public class ShuffleManager : Singleton<ShuffleManager>
                         if (leftSideSuitcases.Count == 1)// eğer stack'te havada olandan başka bir obje yok ise root a göre konumla
                         {
                             newSuitcasePos = leftSideSuitcasesRoot.transform.position;
-                            newSuitcasePos.y += suitcaseDeltaPosY;
+                            newSuitcasePos.y += SuitcaseDeltaPosY;
                         }
                         else // havada olan objenin bir öncekisini al
                         {
                             newSuitcasePos = leftSideSuitcases[leftSideSuitcases.Count - 2].transform.position;
-                            newSuitcasePos.y += suitcaseDeltaPosY;
+                            newSuitcasePos.y += SuitcaseDeltaPosY;
                         }
                     }
                     else
@@ -324,7 +322,7 @@ public class ShuffleManager : Singleton<ShuffleManager>
                     newSuitcasePos = leftSideSuitcasesRoot.transform.position;
                 }
 
-                newSuitcasePos.y += suitcaseDeltaPosY;
+                newSuitcasePos.y += SuitcaseDeltaPosY;
                 var newSuitcase = ObjectPool.Instance.GetObject(newSuitcasePos);
                 newSuitcase.SetActive(true);
                 newSuitcase.transform.SetParent(side.transform.parent);
@@ -346,12 +344,12 @@ public class ShuffleManager : Singleton<ShuffleManager>
                         if (rightSideSuitcases.Count == 1)// eğer stack'te havada olandan başka bir obje yok ise root a göre konumla
                         {
                             newSuitcasePos = rightSideSuitcasesRoot.transform.position;
-                            newSuitcasePos.y += suitcaseDeltaPosY;
+                            newSuitcasePos.y += SuitcaseDeltaPosY;
                         }
                         else // havada olan objenin bir öncekisini al
                         {
                             newSuitcasePos = rightSideSuitcases[rightSideSuitcases.Count - 2].transform.position;
-                            newSuitcasePos.y += suitcaseDeltaPosY;
+                            newSuitcasePos.y += SuitcaseDeltaPosY;
                         }
                     }
                     else
@@ -364,7 +362,7 @@ public class ShuffleManager : Singleton<ShuffleManager>
                     newSuitcasePos = rightSideSuitcasesRoot.transform.position;
                 }
 
-                newSuitcasePos.y += suitcaseDeltaPosY;
+                newSuitcasePos.y += SuitcaseDeltaPosY;
                 var newSuitcase = ObjectPool.Instance.GetObject(newSuitcasePos);
                 newSuitcase.SetActive(true);
                 newSuitcase.transform.SetParent(side.transform.parent);
@@ -377,23 +375,23 @@ public class ShuffleManager : Singleton<ShuffleManager>
 
     public void RemoveSuitcase(Side side, int suitcaseAmount)
     {
-        if (side.transform.position.x < 0)// left side
+        if (side.transform.position.x < 0 && leftSideSuitcases.Any())// left side
         {
             int suitcasesOldTopIndex = leftSideSuitcases.Count - 1;
-            int suitcasesNewTopIndex = leftSideSuitcases.Count - suitcaseAmount;
+            int suitcasesNewTopIndex = Mathf.Clamp(leftSideSuitcases.Count - suitcaseAmount, 0, int.MaxValue);
 
-            for (int i = suitcasesOldTopIndex; i > suitcasesNewTopIndex; i--)
+            for (int i = suitcasesOldTopIndex; i >= suitcasesNewTopIndex; i--)
             {
                 leftSideSuitcases[i].SetActive(false);// pool a geri dön
                 leftSideSuitcases.RemoveAt(i);
             }
         }
-        else// right side
+        else if (side.transform.position.x > 0 && rightSideSuitcases.Any())// right side
         {
             int suitcasesOldTopIndex = rightSideSuitcases.Count - 1;
-            int suitcasesNewTopIndex = rightSideSuitcases.Count - suitcaseAmount;
+            int suitcasesNewTopIndex = Mathf.Clamp(rightSideSuitcases.Count - suitcaseAmount, 0, int.MaxValue);
 
-            for (int i = suitcasesOldTopIndex; i > suitcasesNewTopIndex; i--)
+            for (int i = suitcasesOldTopIndex; i >= suitcasesNewTopIndex; i--)
             {
                 rightSideSuitcases[i].SetActive(false);
                 rightSideSuitcases.RemoveAt(i);
