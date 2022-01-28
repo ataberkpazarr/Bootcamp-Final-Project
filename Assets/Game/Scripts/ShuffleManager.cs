@@ -94,7 +94,7 @@ public class ShuffleManager : Singleton<ShuffleManager>
 
             UpdateParabolaVertexPos();
 
-            if(currentShufflingObject != leftSideSuitcases.Last())// hareket ettirilecek obje havadaki obje değilse
+            if (currentShufflingObject != leftSideSuitcases.Last())// hareket ettirilecek obje havadaki obje değilse
             {
                 currentObjectEulerZ = leftSideSuitcases.Last().transform.eulerAngles.z;// hareket ettirilecek objenin ilk Z rotation ını al
             }
@@ -108,6 +108,7 @@ public class ShuffleManager : Singleton<ShuffleManager>
 
             // parabolic transfer animation
             leftParabolaSeq = DOTween.Sequence();
+            /*
             leftParabolaSeq.Append(currentShufflingObject.transform.DOMoveX(tweenParabolaVertex.position.x, animationSpeed)
                 .SetEase(Ease.InQuad)
                 .OnComplete(() => { currentShufflingObject?.transform.DOMoveX(newPos.x, animationSpeed).SetEase(Ease.OutQuad); }));
@@ -116,6 +117,18 @@ public class ShuffleManager : Singleton<ShuffleManager>
                 .OnComplete(() => {
                     currentShufflingObject?.transform.DOMoveY(newPos.y, animationSpeed).SetEase(Ease.InQuad);
                 }));
+            */
+            //leftParabolaSeq.Append(currentShufflingObject.transform.DOLocalJump(new Vector3(newPos.x, newPos.y, 0), 5, 1, animationSpeed));
+            leftParabolaSeq.Append(currentShufflingObject.transform.DOMoveX(tweenParabolaVertex.position.x, animationSpeed)
+                .SetEase(Ease.InQuad));
+            leftParabolaSeq.Join(currentShufflingObject.transform.DOMoveY(tweenParabolaVertex.position.y, animationSpeed)
+                .SetEase(Ease.OutQuad));
+
+            leftParabolaSeq.Append(currentShufflingObject?.transform.DOMoveX(newPos.x, animationSpeed).SetEase(Ease.OutQuad));
+            leftParabolaSeq.Join(currentShufflingObject?.transform.DOMoveY(newPos.y, animationSpeed).SetEase(Ease.InQuad));
+
+
+
             leftParabolaSeq.Join(currentShufflingObject.transform.DORotate(new Vector3(0, 0, currentObjectEulerZ - 180), animationSpeed * 2)
                 .SetEase(Ease.InOutQuad)
                 .OnComplete(() => { currentShufflingObject.transform.DOPunchScale(Vector3.one / 2, 0.25f, 2, 0.5f); })
@@ -133,7 +146,13 @@ public class ShuffleManager : Singleton<ShuffleManager>
 
             rightSideSuitcases.Add(currentShufflingObject);
 
-            leftParabolaSeq.Play().OnComplete(MoveFromLeftToRight);
+           leftParabolaSeq.Play().OnComplete(MoveFromLeftToRight); 
+            /////////////////////////////////leftParabolaSeq.Play().OnComplete(MoveFromLeftToRight).OnStepComplete(() => leftParabolaSeq.Kill()); mantıklı olabilir
+            ///
+            ////////////leftParabolaSeq.Play().OnComplete(() => leftParabolaSeq.Kill()).OnStepComplete(() => { currentShufflingObject = null; MoveFromLeftToRight(); });
+
+
+
             //parabolaSeq.Play().OnComplete(() => StartCoroutine(LeftToRightRoutine()));
             //parabolaSeq.Play();
 
@@ -187,6 +206,7 @@ public class ShuffleManager : Singleton<ShuffleManager>
 
             // parabolic transfer animation
             rightPrabolaSeq = DOTween.Sequence();
+            /*
             rightPrabolaSeq.Append(currentShufflingObject.transform.DOMoveX(tweenParabolaVertex.position.x, animationSpeed)
                 .SetEase(Ease.InQuad)
                 .OnComplete(() => { currentShufflingObject?.transform.DOMoveX(newPos.x, animationSpeed).SetEase(Ease.OutQuad); }));
@@ -195,10 +215,29 @@ public class ShuffleManager : Singleton<ShuffleManager>
                 .OnComplete(() => {
                     currentShufflingObject?.transform.DOMoveY(newPos.y, animationSpeed).SetEase(Ease.InQuad);
                 }));
+            */
+
+            /*
+            rightPrabolaSeq.Append(currentShufflingObject.transform.DOLocalJump(new Vector3(newPos.x,newPos.y,0),5,1,animationSpeed));
             rightPrabolaSeq.Join(currentShufflingObject.transform.DORotate(new Vector3(0, 0, currentObjectEulerZ + 180), animationSpeed * 2)
                 .SetEase(Ease.InOutQuad)
                 .OnComplete(() => { currentShufflingObject.transform.DOPunchScale(Vector3.one / 2, 0.25f, 2, 0.5f); })
                 ); ;
+            */
+
+            rightPrabolaSeq.Append(currentShufflingObject.transform.DOMoveX(tweenParabolaVertex.position.x, animationSpeed)
+                .SetEase(Ease.InQuad));
+            rightPrabolaSeq.Join(currentShufflingObject.transform.DOMoveY(tweenParabolaVertex.position.y, animationSpeed)
+                .SetEase(Ease.OutQuad));
+
+            rightPrabolaSeq.Append(currentShufflingObject?.transform.DOMoveX(newPos.x, animationSpeed).SetEase(Ease.OutQuad));
+            rightPrabolaSeq.Join(currentShufflingObject?.transform.DOMoveY(newPos.y, animationSpeed).SetEase(Ease.InQuad));
+
+            rightPrabolaSeq.Join(currentShufflingObject.transform.DORotate(new Vector3(0, 0, currentObjectEulerZ + 180), animationSpeed * 2)
+                .SetEase(Ease.InOutQuad)
+                .OnComplete(() => { currentShufflingObject.transform.DOPunchScale(Vector3.one / 2, 0.25f, 2, 0.5f); })
+                ); ;
+
             //.OnComplete(() => { parabolaSeq.Join(g.transform.DOPunchScale(Vector3.one / 2, 0.25f, 2, 0.5f)).OnStepComplete(() => FixScaleAndRotationOfNewJoinedSuitcase(g)); }));
             //.OnComplete(() => { parabolaSeq.Join(g.transform.DOPunchScale(Vector3.one / 2, 0.25f, 2, 0.5f)).OnStepComplete(() => { parabolaSeq.Join(g.transform.DORotateQuaternion(Quaternion.identity, animationSpeed)); }); }));
 
@@ -210,7 +249,13 @@ public class ShuffleManager : Singleton<ShuffleManager>
 
             leftSideSuitcases.Add(currentShufflingObject);
             //parabolaSeq.Play();
-            rightPrabolaSeq.Play().OnComplete(() => {currentShufflingObject = null; MoveFromRightToLeft(); });
+            ///////////////////////////////////rightPrabolaSeq.Play().OnComplete(MoveFromRightToLeft).OnStepComplete(() => rightPrabolaSeq.Kill()); bu da mantıklı olabilir dursun
+            rightPrabolaSeq.Play().OnComplete(() => { currentShufflingObject = null; MoveFromRightToLeft(); });
+
+            //////////////////////////////////rightPrabolaSeq.Play().OnComplete(() => rightPrabolaSeq.Kill()).OnStepComplete(() => { currentShufflingObject = null; MoveFromRightToLeft(); });
+            ///////////////rightPrabolaSeq.Play().OnComplete(() => { currentShufflingObject = null; MoveFromRightToLeft(); }).OnStepComplete(() => rightPrabolaSeq.Kill());
+            //()=>rightPrabolaSeq.Kill()
+
             //parabolaSeq.Play().OnComplete(()=>StartCoroutine(RightToLeftRoutine()));
         }
     }
@@ -247,18 +292,18 @@ public class ShuffleManager : Singleton<ShuffleManager>
     #region Gate Methods
     // denemede
     public void AddSuitcase(Side side, int suitcaseAmount)
-    {       
-        if(side.transform.position.x < 0)// left side
+    {
+        if (side.transform.position.x < 0)// left side
         {
             for (int i = 0; i < suitcaseAmount; i++)
             {
                 Vector3 newSuitcasePos;
-                if(leftSideSuitcases.Count > 0)
+                if (leftSideSuitcases.Count > 0)
                 {
-                    if(leftSideSuitcases.Last() == currentShufflingObject)// stack'in sonundaki obje havada ise
+                    if (leftSideSuitcases.Last() == currentShufflingObject)// stack'in sonundaki obje havada ise
                     {
-                        
-                        if(leftSideSuitcases.Count == 1)// eğer stack'te havada olandan başka bir obje yok ise root a göre konumla
+
+                        if (leftSideSuitcases.Count == 1)// eğer stack'te havada olandan başka bir obje yok ise root a göre konumla
                         {
                             newSuitcasePos = leftSideSuitcasesRoot.transform.position;
                             newSuitcasePos.y += suitcaseDeltaPosY;
@@ -278,7 +323,7 @@ public class ShuffleManager : Singleton<ShuffleManager>
                 {
                     newSuitcasePos = leftSideSuitcasesRoot.transform.position;
                 }
-                
+
                 newSuitcasePos.y += suitcaseDeltaPosY;
                 var newSuitcase = ObjectPool.Instance.GetObject(newSuitcasePos);
                 newSuitcase.SetActive(true);
@@ -347,7 +392,7 @@ public class ShuffleManager : Singleton<ShuffleManager>
         {
             int suitcasesOldTopIndex = rightSideSuitcases.Count - 1;
             int suitcasesNewTopIndex = rightSideSuitcases.Count - suitcaseAmount;
-            
+
             for (int i = suitcasesOldTopIndex; i > suitcasesNewTopIndex; i--)
             {
                 rightSideSuitcases[i].SetActive(false);

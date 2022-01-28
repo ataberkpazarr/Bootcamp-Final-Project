@@ -13,6 +13,11 @@ public class SwipeManager : MonoBehaviour
 
     private bool alreadyInvokedRight = false;
     private bool alreadyInvokedLeft = false;
+    private bool firstTouch = true;
+
+
+    private float input;
+    private Vector3 mouseRootPos;
 
     private void Update()
     {
@@ -21,123 +26,98 @@ public class SwipeManager : MonoBehaviour
 
     private void HandleWithInput()
     {
-
-        if (Input.GetMouseButton(0))
+        if (firstTouch)
         {
-
-            //dragStarted.Invoke();
-
-            if (Input.mousePosition.x > Screen.width / 2.0f && !alreadyInvokedRight) //right
+            if (Input.GetMouseButtonDown(0))
             {
+                startTouch = Input.mousePosition;
+               
+            }
+            if (Input.GetMouseButton(0))
+            {
+                swipeDelta = (Vector2)Input.mousePosition - startTouch;
+            }
+            else if (Input.GetMouseButtonUp(0))
+            {
+                Reset();
+            }
+
+            //Did we cross the distance?
+            if (swipeDelta.magnitude > 150)
+            {
+                //Which direction?
+                float x = swipeDelta.x;
+                //Left or Right
+                if (x < 0)
+                {
+                    leftSwiped.Invoke();
+                    //StartCoroutine(LeftSwipeInvokeRoutine());
+                    swipeLeft = true;
+                }
+                else
+                {
+                    rightSwiped.Invoke();
+                    //StartCoroutine(RightSwipeInvokeRoutine());
+                    swipeRight = true;
+                }
+                firstTouch = false;
+                Reset();
+            }
+            
+        }
+        else if(!firstTouch)
+        { 
+            if (Input.GetMouseButton(0))
+            {
+
+              if (Input.mousePosition.x > Screen.width / 2.0f && !alreadyInvokedRight) //right
+              {
                 leftDragStopped?.Invoke();
-                //dragStopped.Invoke();
+       
                 dragStarted?.Invoke();
                 rightSwiped?.Invoke();
                 alreadyInvokedRight = true;
                 alreadyInvokedLeft = false;
 
-            }
+              }
 
-            if (Input.mousePosition.x < Screen.width / 2.0f && !alreadyInvokedLeft) // left
-            {
+              if (Input.mousePosition.x < Screen.width / 2.0f && !alreadyInvokedLeft) // left
+              {
                 rightDragStopped?.Invoke();
-                //dragStopped.Invoke();
+            
                 dragStarted?.Invoke();
                 leftSwiped?.Invoke();
                 alreadyInvokedLeft = true;
                 alreadyInvokedRight = false;
+              }
+            }
+            else if (Input.GetMouseButtonUp(0))
+            {
+  
+               rightDragStopped?.Invoke();
+               leftDragStopped?.Invoke();
+               alreadyInvokedRight = false;
+               alreadyInvokedLeft = false;
+                firstTouch = true;
             }
         }
-        else if (Input.GetMouseButtonUp(0))
+
+        if (Input.GetMouseButtonUp(0))
         {
-            //dragStopped?.Invoke();
+        
             rightDragStopped?.Invoke();
             leftDragStopped?.Invoke();
             alreadyInvokedRight = false;
             alreadyInvokedLeft = false;
+            firstTouch = true;
         }
 
-        /*
-        tap = swipeLeft = swipeRight = false;
-
-        #region Standalone Inputs
-        if (Input.GetMouseButtonDown(0))
-        {
-            dragStarted.Invoke();
-            tap = true;
-            isDraging = true;
-            startTouch = Input.mousePosition;
-        }
-        else if (Input.GetMouseButtonUp(0))
-        {
-            dragStopped.Invoke();
-            isDraging = false;
-            Reset();
-        }
-        #endregion
-
-        #region Mobile Input
-        if (Input.touches.Length > 0)
-        {
-            if (Input.touches[0].phase == TouchPhase.Began)
-            {
-                tap = true;
-                isDraging = true;
-                startTouch = Input.touches[0].position;
-            }
-            else if (Input.touches[0].phase == TouchPhase.Ended || Input.touches[0].phase == TouchPhase.Canceled)
-            {
-                isDraging = false;
-                //Reset();
-            }
-        }
-        #endregion
-
-        //Calculate the distance
-        swipeDelta = Vector2.zero;
-        if (isDraging)
-        {
-            if (Input.touches.Length < 0)
-            {
-                swipeDelta = Input.touches[0].position - startTouch;
-                //startTouch = Input.touches[0].position;
-            }
-            else if (Input.GetMouseButton(0))
-            {
-                swipeDelta = (Vector2)Input.mousePosition - startTouch;
-                //startTouch = Input.mousePosition;
-            }
-        }
-
-        //Did we cross the distance?
-        if (swipeDelta.magnitude > 150)
-        {
-            //Which direction?
-            float x = swipeDelta.x;
-            //Left or Right
-            if (x < 0)
-            {
-                leftSwiped.Invoke();
-                //StartCoroutine(LeftSwipeInvokeRoutine());
-                swipeLeft = true;
-            }
-            else
-            {
-                rightSwiped.Invoke();
-                //StartCoroutine(RightSwipeInvokeRoutine());
-                swipeRight = true;
-
-            }
-
-            Reset();
-        }*/
     }
 
     private void Reset()
     {
-        //startTouch = swipeDelta = Vector2.zero;
+        startTouch = swipeDelta = Vector2.zero;
         //isDraging = false;
-
     }
 
     private IEnumerator LeftSwipeInvokeRoutine()
