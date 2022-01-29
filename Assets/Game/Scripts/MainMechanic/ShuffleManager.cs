@@ -14,6 +14,8 @@ public class ShuffleManager : Singleton<ShuffleManager>
     [Header("Suitcase")]
     [SerializeField] private BoxCollider suitcase;
     private float SuitcaseDeltaPosY => suitcase.size.y;
+    [Header("Bomb")]
+    [SerializeField] private GameObject bombPrefab;
     [Header("Tween Components")]
     [SerializeField] private Transform tweenParabolaVertex;
     [SerializeField] [Range(0f, 1f)] private float animationSpeed = 0.25f;
@@ -145,8 +147,9 @@ public class ShuffleManager : Singleton<ShuffleManager>
             //g.transform.RotateAround(g.transform.position,g.transform.up,360*Time.deltaTime);
 
             rightSideSuitcases.Add(currentShufflingObject);
+            currentShufflingObject.transform.SetParent(rightSideSuitcasesRoot.transform.parent);// parent'ı Side objesi oldu(bomba olayında gerekliydi)
 
-           leftParabolaSeq.Play().OnComplete(MoveFromLeftToRight); 
+            leftParabolaSeq.Play().OnComplete(MoveFromLeftToRight); 
             /////////////////////////////////leftParabolaSeq.Play().OnComplete(MoveFromLeftToRight).OnStepComplete(() => leftParabolaSeq.Kill()); mantıklı olabilir
             ///
             ////////////leftParabolaSeq.Play().OnComplete(() => leftParabolaSeq.Kill()).OnStepComplete(() => { currentShufflingObject = null; MoveFromLeftToRight(); });
@@ -246,6 +249,7 @@ public class ShuffleManager : Singleton<ShuffleManager>
             //.OnComplete(() => { parabolaSeq.Join(g.transform.DORotate(new Vector3(0, 0, g.transform.rotation.eulerAngles.z + 180), animationSpeed * 2)); }));
 
             leftSideSuitcases.Add(currentShufflingObject);
+            currentShufflingObject.transform.SetParent(leftSideSuitcasesRoot.transform.parent);
             //parabolaSeq.Play();
             ///////////////////////////////////rightPrabolaSeq.Play().OnComplete(MoveFromRightToLeft).OnStepComplete(() => rightPrabolaSeq.Kill()); bu da mantıklı olabilir dursun
             rightPrabolaSeq.Play().OnComplete(MoveFromRightToLeft);
@@ -306,7 +310,7 @@ public class ShuffleManager : Singleton<ShuffleManager>
                             newSuitcasePos = leftSideSuitcasesRoot.transform.position;
                             newSuitcasePos.y += SuitcaseDeltaPosY;
                         }
-                        else // havada olan objenin bir öncekisini al
+                        else // havada olan objenin bir öncesindekini al
                         {
                             newSuitcasePos = leftSideSuitcases[leftSideSuitcases.Count - 2].transform.position;
                             newSuitcasePos.y += SuitcaseDeltaPosY;
@@ -325,7 +329,7 @@ public class ShuffleManager : Singleton<ShuffleManager>
                 newSuitcasePos.y += SuitcaseDeltaPosY;
                 var newSuitcase = ObjectPool.Instance.GetObject(newSuitcasePos);
                 newSuitcase.SetActive(true);
-                newSuitcase.transform.SetParent(side.transform.parent);
+                newSuitcase.transform.SetParent(side.transform);
                 leftSideSuitcases.Add(newSuitcase);
                 //animation
                 newSuitcase.transform.DOPunchScale(Vector3.one / 2, 0.25f, 2, 0.5f);
@@ -346,7 +350,7 @@ public class ShuffleManager : Singleton<ShuffleManager>
                             newSuitcasePos = rightSideSuitcasesRoot.transform.position;
                             newSuitcasePos.y += SuitcaseDeltaPosY;
                         }
-                        else // havada olan objenin bir öncekisini al
+                        else // havada olan objenin bir öncesindekini al
                         {
                             newSuitcasePos = rightSideSuitcases[rightSideSuitcases.Count - 2].transform.position;
                             newSuitcasePos.y += SuitcaseDeltaPosY;
@@ -365,7 +369,7 @@ public class ShuffleManager : Singleton<ShuffleManager>
                 newSuitcasePos.y += SuitcaseDeltaPosY;
                 var newSuitcase = ObjectPool.Instance.GetObject(newSuitcasePos);
                 newSuitcase.SetActive(true);
-                newSuitcase.transform.SetParent(side.transform.parent);
+                newSuitcase.transform.SetParent(side.transform);
                 rightSideSuitcases.Add(newSuitcase);
                 //animation
                 newSuitcase.transform.DOPunchScale(Vector3.one / 2, 0.25f, 2, 0.5f);
@@ -382,7 +386,7 @@ public class ShuffleManager : Singleton<ShuffleManager>
 
             for (int i = suitcasesOldTopIndex; i >= suitcasesNewTopIndex; i--)
             {
-                leftSideSuitcases[i].SetActive(false);// pool a geri dön
+                ObjectPool.Instance.PullBackTheObject(leftSideSuitcases[i]);// pool a geri dön
                 leftSideSuitcases.RemoveAt(i);
             }
         }
@@ -393,10 +397,169 @@ public class ShuffleManager : Singleton<ShuffleManager>
 
             for (int i = suitcasesOldTopIndex; i >= suitcasesNewTopIndex; i--)
             {
-                rightSideSuitcases[i].SetActive(false);
+                ObjectPool.Instance.PullBackTheObject(rightSideSuitcases[i]);
                 rightSideSuitcases.RemoveAt(i);
             }
         }
+    }
+    #endregion
+
+    #region Bomb Methods
+    // normal bir çanta gibi stack'e eklenir
+    public void AddBomb(Side side, int bombAmount)
+    {
+        if (side.transform.position.x < 0)// left side
+        {
+            for (int i = 0; i < bombAmount; i++)
+            {
+                Vector3 bombPos;
+                if (leftSideSuitcases.Count > 0)
+                {
+                    if (leftSideSuitcases.Last() == currentShufflingObject)// stack'in sonundaki obje havada ise
+                    {
+
+                        if (leftSideSuitcases.Count == 1)// eğer stack'te havada olandan başka bir obje yok ise root a göre konumla
+                        {
+                            bombPos = leftSideSuitcasesRoot.transform.position;
+                            bombPos.y += SuitcaseDeltaPosY;
+                        }
+                        else // havada olan objenin bir öncesindekini al
+                        {
+                            bombPos = leftSideSuitcases[leftSideSuitcases.Count - 2].transform.position;
+                            bombPos.y += SuitcaseDeltaPosY;
+                        }
+                    }
+                    else
+                    {
+                        bombPos = leftSideSuitcases.Last().transform.position;
+                    }
+                }
+                else
+                {
+                    bombPos = leftSideSuitcasesRoot.transform.position;
+                }
+
+                bombPos.y += SuitcaseDeltaPosY;
+                var bomb = Instantiate(bombPrefab, side.transform);
+                bomb.transform.position = bombPos;
+                leftSideSuitcases.Add(bomb);
+                //animation
+                bomb.transform.DOPunchScale(Vector3.one / 2, 0.25f, 2, 0.5f);
+            }
+        }
+        else// right side
+        {
+            for (int i = 0; i < bombAmount; i++)
+            {
+                Vector3 bombPos;
+                if (rightSideSuitcases.Count > 0)
+                {
+                    if (rightSideSuitcases.Last() == currentShufflingObject)// stack'in sonundaki obje havada ise
+                    {
+
+                        if (rightSideSuitcases.Count == 1)// eğer stack'te havada olandan başka bir obje yok ise root a göre konumla
+                        {
+                            bombPos = rightSideSuitcasesRoot.transform.position;
+                            bombPos.y += SuitcaseDeltaPosY;
+                        }
+                        else // havada olan objenin bir öncesindekini al
+                        {
+                            bombPos = rightSideSuitcases[leftSideSuitcases.Count - 2].transform.position;
+                            bombPos.y += SuitcaseDeltaPosY;
+                        }
+                    }
+                    else
+                    {
+                        bombPos = rightSideSuitcases.Last().transform.position;
+                    }
+                }
+                else
+                {
+                    bombPos = rightSideSuitcasesRoot.transform.position;
+                }
+
+                bombPos.y += SuitcaseDeltaPosY;
+                var bomb = Instantiate(bombPrefab, side.transform);
+                bomb.transform.position = bombPos;
+                rightSideSuitcases.Add(bomb);
+                //animation
+                bomb.transform.DOPunchScale(Vector3.one / 2, 0.25f, 2, 0.5f);
+            }
+        }
+    }
+
+    public void HandleWithBombExplosion(List<GameObject> explodedSuitcases, GameObject bombItself)
+    {
+        // handle with bomb itself
+        if (bombItself.transform.parent.position.x < 0)// bomb on the left side
+        {
+            leftSideSuitcases.Remove(bombItself);
+        }
+        else if (bombItself.transform.parent.position.x > 0)
+        {
+            rightSideSuitcases.Remove(bombItself);
+        }
+
+        //handle with remaining suitcases (candy crush effect)
+        /*
+        List<GameObject> unexplodedSuitcasesOnTop = new List<GameObject>();
+        if (bombItself.transform.parent.position.x < 0)// left side suitcase
+        {
+            int highestExplodedIndex = 0;
+            foreach (var item in explodedSuitcases)
+            {
+                if(leftSideSuitcases.IndexOf(item) > highestExplodedIndex)
+                {
+                    highestExplodedIndex = leftSideSuitcases.IndexOf(item);
+                }
+            }
+        
+            for (int i = highestExplodedIndex + 1; i < leftSideSuitcases.Count - 1; i++)
+            {
+                unexplodedSuitcasesOnTop.Add(leftSideSuitcases[i]);
+            }
+        }
+        else if (bombItself.transform.parent.position.x > 0)
+        {
+            int highestExplodedIndex = 0;
+            foreach (var item in explodedSuitcases)
+            {
+                if (rightSideSuitcases.IndexOf(item) > highestExplodedIndex)
+                {
+                    highestExplodedIndex = leftSideSuitcases.IndexOf(item);
+                }
+            }
+        
+            for (int i = highestExplodedIndex + 1; i < rightSideSuitcases.Count - 1; i++)
+            {
+                unexplodedSuitcasesOnTop.Add(rightSideSuitcases[i]);
+            }
+        }
+        */
+
+        Destroy(bombItself);
+
+        // handle with bomb explosion 
+        foreach (var item in explodedSuitcases)
+        {
+            // remove items from lists (bomb's parent will be one of the sides)
+            if (item.transform.parent.position.x < 0)// left side suitcase
+            {
+                leftSideSuitcases.Remove(item);
+            }
+            else if(item.transform.parent.position.x > 0)
+            {
+                rightSideSuitcases.Remove(item);
+            }
+            ObjectPool.Instance.PullBackTheObject(item);
+        }
+        //handle with remaining suitcases (candy crush effect)
+        //foreach (var item in unexplodedSuitcasesOnTop)
+        //{
+        //    var unexplodedNewPos = item.transform.position;
+        //    unexplodedNewPos.y -= explodedSuitcases.Count * SuitcaseDeltaPosY;
+        //    item.transform.position = unexplodedNewPos;
+        //}
     }
     #endregion
 }

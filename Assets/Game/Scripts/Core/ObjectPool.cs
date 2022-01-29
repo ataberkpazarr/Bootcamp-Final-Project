@@ -34,4 +34,10 @@ public class ObjectPool : Singleton<ObjectPool>
 
         return null;
     }
+
+    public void PullBackTheObject(GameObject poolObject)
+    {
+        poolObject.SetActive(false);
+        poolObject.transform.SetParent(transform);
+    }
 }

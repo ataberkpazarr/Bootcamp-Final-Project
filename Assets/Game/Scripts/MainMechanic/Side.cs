@@ -15,5 +15,10 @@ public class Side : MonoBehaviour
         {
             ShuffleManager.Instance.RemoveSuitcase(this, 5);
         }
+
+        if (other.name == "BombGate")
+        {
+            ShuffleManager.Instance.AddBomb(this, 1);
+        }
     }
 }
