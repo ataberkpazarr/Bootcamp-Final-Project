@@ -133,7 +133,7 @@ public class ShuffleManager : Singleton<ShuffleManager>
 
             leftParabolaSeq.Join(currentShufflingObject.transform.DORotate(new Vector3(0, 0, currentObjectEulerZ - 180), animationSpeed * 2)
                 .SetEase(Ease.InOutQuad)
-                .OnComplete(() => { currentShufflingObject.transform.DOPunchScale(Vector3.one / 2, 0.25f, 2, 0.5f); })
+                .OnComplete(() => { currentShufflingObject?.transform.DOPunchScale(Vector3.one / 2, 0.25f, 2, 0.5f); })
                 );
             //.OnComplete(() => { parabolaSeq.Join(g.transform.DOPunchScale(Vector3.one / 2, 0.25f, 2, 0.5f)).OnStepComplete(() => FixScaleAndRotationOfNewJoinedSuitcase(g)); }));
             //.OnComplete(() => { parabolaSeq.Join(g.transform.DOPunchScale(Vector3.one / 2, 0.25f, 2, 0.5f)).OnStepComplete(() => { parabolaSeq.Join(g.transform.DORotateQuaternion(Quaternion.identity, animationSpeed)); }); }));
@@ -236,7 +236,7 @@ public class ShuffleManager : Singleton<ShuffleManager>
 
             rightPrabolaSeq.Join(currentShufflingObject.transform.DORotate(new Vector3(0, 0, currentObjectEulerZ + 180), animationSpeed * 2)
                 .SetEase(Ease.InOutQuad)
-                .OnComplete(() => { currentShufflingObject.transform.DOPunchScale(Vector3.one / 2, 0.25f, 2, 0.5f); })
+                .OnComplete(() => { currentShufflingObject?.transform.DOPunchScale(Vector3.one / 2, 0.25f, 2, 0.5f); })
                 ); ;
 
             //.OnComplete(() => { parabolaSeq.Join(g.transform.DOPunchScale(Vector3.one / 2, 0.25f, 2, 0.5f)).OnStepComplete(() => FixScaleAndRotationOfNewJoinedSuitcase(g)); }));
@@ -295,16 +295,15 @@ public class ShuffleManager : Singleton<ShuffleManager>
     // denemede
     public void AddSuitcase(Side side, int suitcaseAmount)
     {
+        Vector3 newSuitcasePos;
         if (side.transform.position.x < 0)// left side
         {
             for (int i = 0; i < suitcaseAmount; i++)
-            {
-                Vector3 newSuitcasePos;
+            {               
                 if (leftSideSuitcases.Count > 0)
                 {
                     if (leftSideSuitcases.Last() == currentShufflingObject)// stack'in sonundaki obje havada ise
                     {
-
                         if (leftSideSuitcases.Count == 1)// eğer stack'te havada olandan başka bir obje yok ise root a göre konumla
                         {
                             newSuitcasePos = leftSideSuitcasesRoot.transform.position;
@@ -339,12 +338,10 @@ public class ShuffleManager : Singleton<ShuffleManager>
         {
             for (int i = 0; i < suitcaseAmount; i++)
             {
-                Vector3 newSuitcasePos;
                 if (rightSideSuitcases.Count > 0)
                 {
                     if (rightSideSuitcases.Last() == currentShufflingObject)// stack'in sonundaki obje havada ise
                     {
-
                         if (rightSideSuitcases.Count == 1)// eğer stack'te havada olandan başka bir obje yok ise root a göre konumla
                         {
                             newSuitcasePos = rightSideSuitcasesRoot.transform.position;
@@ -408,16 +405,15 @@ public class ShuffleManager : Singleton<ShuffleManager>
     // normal bir çanta gibi stack'e eklenir
     public void AddBomb(Side side, int bombAmount)
     {
+        Vector3 bombPos;
         if (side.transform.position.x < 0)// left side
         {
             for (int i = 0; i < bombAmount; i++)
             {
-                Vector3 bombPos;
                 if (leftSideSuitcases.Count > 0)
                 {
                     if (leftSideSuitcases.Last() == currentShufflingObject)// stack'in sonundaki obje havada ise
                     {
-
                         if (leftSideSuitcases.Count == 1)// eğer stack'te havada olandan başka bir obje yok ise root a göre konumla
                         {
                             bombPos = leftSideSuitcasesRoot.transform.position;
@@ -451,7 +447,6 @@ public class ShuffleManager : Singleton<ShuffleManager>
         {
             for (int i = 0; i < bombAmount; i++)
             {
-                Vector3 bombPos;
                 if (rightSideSuitcases.Count > 0)
                 {
                     if (rightSideSuitcases.Last() == currentShufflingObject)// stack'in sonundaki obje havada ise
@@ -464,7 +459,7 @@ public class ShuffleManager : Singleton<ShuffleManager>
                         }
                         else // havada olan objenin bir öncesindekini al
                         {
-                            bombPos = rightSideSuitcases[leftSideSuitcases.Count - 2].transform.position;
+                            bombPos = rightSideSuitcases[rightSideSuitcases.Count - 2].transform.position;
                             bombPos.y += SuitcaseDeltaPosY;
                         }
                     }
@@ -500,11 +495,12 @@ public class ShuffleManager : Singleton<ShuffleManager>
             rightSideSuitcases.Remove(bombItself);
         }
 
-        //handle with remaining suitcases (candy crush effect)
-        /*
+        // handle with remaining suitcases (candy crush effect)
+        // patlamayan çantaları topla
         List<GameObject> unexplodedSuitcasesOnTop = new List<GameObject>();
-        if (bombItself.transform.parent.position.x < 0)// left side suitcase
+        if (bombItself.transform.parent.position.x < 0)// bomb exploded on the left stack
         {
+            //patlayan son çantanın indeksini bul
             int highestExplodedIndex = 0;
             foreach (var item in explodedSuitcases)
             {
@@ -513,29 +509,28 @@ public class ShuffleManager : Singleton<ShuffleManager>
                     highestExplodedIndex = leftSideSuitcases.IndexOf(item);
                 }
             }
-        
-            for (int i = highestExplodedIndex + 1; i < leftSideSuitcases.Count - 1; i++)
+            // patlamayanları ekle
+            for (int i = highestExplodedIndex + 1; i < leftSideSuitcases.Count; i++)
             {
                 unexplodedSuitcasesOnTop.Add(leftSideSuitcases[i]);
             }
         }
-        else if (bombItself.transform.parent.position.x > 0)
+        else if (bombItself.transform.parent.position.x > 0)// bomb exploded ont he right stack
         {
             int highestExplodedIndex = 0;
             foreach (var item in explodedSuitcases)
             {
                 if (rightSideSuitcases.IndexOf(item) > highestExplodedIndex)
                 {
-                    highestExplodedIndex = leftSideSuitcases.IndexOf(item);
+                    highestExplodedIndex = rightSideSuitcases.IndexOf(item);
                 }
             }
         
-            for (int i = highestExplodedIndex + 1; i < rightSideSuitcases.Count - 1; i++)
+            for (int i = highestExplodedIndex + 1; i < rightSideSuitcases.Count; i++)
             {
                 unexplodedSuitcasesOnTop.Add(rightSideSuitcases[i]);
             }
         }
-        */
 
         Destroy(bombItself);
 
@@ -553,13 +548,16 @@ public class ShuffleManager : Singleton<ShuffleManager>
             }
             ObjectPool.Instance.PullBackTheObject(item);
         }
-        //handle with remaining suitcases (candy crush effect)
-        //foreach (var item in unexplodedSuitcasesOnTop)
-        //{
-        //    var unexplodedNewPos = item.transform.position;
-        //    unexplodedNewPos.y -= explodedSuitcases.Count * SuitcaseDeltaPosY;
-        //    item.transform.position = unexplodedNewPos;
-        //}
+
+        // handle with remaining suitcases (candy crush effect)
+        // patlamayan çantaları yeniden konumla
+        foreach (var item in unexplodedSuitcasesOnTop)
+        {
+            var unexplodedNewPos = item.transform.position;
+            unexplodedNewPos.y -= (explodedSuitcases.Count + 1) * SuitcaseDeltaPosY;
+            item.transform.DOMoveY(unexplodedNewPos.y, 0.75f).SetEase(Ease.OutBounce);
+            
+        }
     }
     #endregion
 }
