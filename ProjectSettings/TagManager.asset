@@ -5,6 +5,9 @@ TagManager:
   serializedVersion: 2
   tags:
   - Suitcase
+  - TimeForStairs
+  - TimeToEndStairs
+  - Stair
   layers:
   - Default
   - TransparentFX

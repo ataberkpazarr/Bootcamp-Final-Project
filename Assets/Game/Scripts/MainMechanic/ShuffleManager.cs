@@ -485,26 +485,29 @@ public class ShuffleManager : Singleton<ShuffleManager>
 
     public void HandleWithBombExplosion(List<GameObject> explodedSuitcases, GameObject bombItself)
     {
+        float explosionPosX = bombItself.transform.parent.position.x;
+
         // handle with bomb itself
-        if (bombItself.transform.parent.position.x < 0)// bomb on the left side
+        if (explosionPosX < 0)// bomb on the left side
         {
             leftSideSuitcases.Remove(bombItself);
         }
-        else if (bombItself.transform.parent.position.x > 0)
+        else if (explosionPosX > 0)
         {
             rightSideSuitcases.Remove(bombItself);
         }
+        Destroy(bombItself);
 
         // handle with remaining suitcases (candy crush effect)
         // patlamayan çantaları topla
         List<GameObject> unexplodedSuitcasesOnTop = new List<GameObject>();
-        if (bombItself.transform.parent.position.x < 0)// bomb exploded on the left stack
+        if (explosionPosX < 0)// bomb exploded on the left stack
         {
             //patlayan son çantanın indeksini bul
             int highestExplodedIndex = 0;
             foreach (var item in explodedSuitcases)
             {
-                if(leftSideSuitcases.IndexOf(item) > highestExplodedIndex)
+                if (leftSideSuitcases.IndexOf(item) > highestExplodedIndex)
                 {
                     highestExplodedIndex = leftSideSuitcases.IndexOf(item);
                 }
@@ -515,7 +518,7 @@ public class ShuffleManager : Singleton<ShuffleManager>
                 unexplodedSuitcasesOnTop.Add(leftSideSuitcases[i]);
             }
         }
-        else if (bombItself.transform.parent.position.x > 0)// bomb exploded ont he right stack
+        else if (explosionPosX > 0)// bomb exploded ont he right stack
         {
             int highestExplodedIndex = 0;
             foreach (var item in explodedSuitcases)
@@ -525,14 +528,14 @@ public class ShuffleManager : Singleton<ShuffleManager>
                     highestExplodedIndex = rightSideSuitcases.IndexOf(item);
                 }
             }
-        
+
             for (int i = highestExplodedIndex + 1; i < rightSideSuitcases.Count; i++)
             {
                 unexplodedSuitcasesOnTop.Add(rightSideSuitcases[i]);
             }
         }
 
-        Destroy(bombItself);
+
 
         // handle with bomb explosion 
         foreach (var item in explodedSuitcases)
@@ -542,7 +545,7 @@ public class ShuffleManager : Singleton<ShuffleManager>
             {
                 leftSideSuitcases.Remove(item);
             }
-            else if(item.transform.parent.position.x > 0)
+            else if (item.transform.parent.position.x > 0)
             {
                 rightSideSuitcases.Remove(item);
             }
@@ -555,8 +558,31 @@ public class ShuffleManager : Singleton<ShuffleManager>
         {
             var unexplodedNewPos = item.transform.position;
             unexplodedNewPos.y -= (explodedSuitcases.Count + 1) * SuitcaseDeltaPosY;
-            item.transform.DOMoveY(unexplodedNewPos.y, 0.75f).SetEase(Ease.OutBounce);
-            
+            item.transform.DOMoveY(unexplodedNewPos.y, 0.5f).SetEase(Ease.OutBounce);
+
+        }
+
+        if (explosionPosX < 0)
+        {
+            StartCoroutine(RefreshPositions(leftSideSuitcases));
+        }
+        else if (explosionPosX > 0)
+        {
+            StartCoroutine(RefreshPositions(rightSideSuitcases));
+        }
+    }
+
+    private IEnumerator RefreshPositions(List<GameObject> sideToRefresh)
+    {
+        yield return new WaitForSeconds(0.5f);
+
+        for (int i = 0; i < sideToRefresh.Count; i++)
+        {
+            print(sideToRefresh[i].transform.position);
+            var refreshedPos = sideToRefresh[i].transform.position;
+            refreshedPos.y = 0.2f + 0.3f * (i + 1);
+            sideToRefresh[i].transform.position = refreshedPos;
+            print(sideToRefresh[i].transform.position);
         }
     }
     #endregion
