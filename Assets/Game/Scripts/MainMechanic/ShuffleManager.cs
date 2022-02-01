@@ -411,7 +411,7 @@ public class ShuffleManager : Singleton<ShuffleManager>
         }
     }
 
-    public void RemoveSuitcaseFromBottom(Side side, int suitcaseAmount)
+    public void RemoveSuitcaseFromBottom(Side side)
     {
         if (side.transform.position.x < 0 && leftSideSuitcases.Any())// left side
         {
