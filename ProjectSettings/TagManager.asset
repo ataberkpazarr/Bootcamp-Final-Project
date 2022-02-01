@@ -8,6 +8,7 @@ TagManager:
   - TimeForStairs
   - TimeToEndStairs
   - Stair
+  - Gate
   layers:
   - Default
   - TransparentFX

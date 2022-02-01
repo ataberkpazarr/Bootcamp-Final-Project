@@ -521,13 +521,9 @@ public class ShuffleManager : Singleton<ShuffleManager>
 
         // handle with bomb itself
         if (explosionPosX < 0)// bomb on the left side
-        {
             leftSideSuitcases.Remove(bombItself);
-        }
         else if (explosionPosX > 0)
-        {
             rightSideSuitcases.Remove(bombItself);
-        }
         Destroy(bombItself);
 
         // handle with remaining suitcases (candy crush effect)
@@ -595,13 +591,9 @@ public class ShuffleManager : Singleton<ShuffleManager>
         }
 
         if (explosionPosX < 0)
-        {
             StartCoroutine(RefreshPositions(leftSideSuitcases));
-        }
         else if (explosionPosX > 0)
-        {
             StartCoroutine(RefreshPositions(rightSideSuitcases));
-        }
     }
 
     private IEnumerator RefreshPositions(List<GameObject> sideToRefresh)
@@ -610,11 +602,9 @@ public class ShuffleManager : Singleton<ShuffleManager>
 
         for (int i = 0; i < sideToRefresh.Count; i++)
         {
-            print(sideToRefresh[i].transform.position);
             var refreshedPos = sideToRefresh[i].transform.position;
-            refreshedPos.y = 0.2f + 0.3f * (i + 1);
+            refreshedPos.y = leftSideSuitcasesRoot.transform.position.y + SuitcaseDeltaPosY * (i + 1);
             sideToRefresh[i].transform.position = refreshedPos;
-            print(sideToRefresh[i].transform.position);
         }
     }
     #endregion

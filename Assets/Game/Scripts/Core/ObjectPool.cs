@@ -16,6 +16,7 @@ public class ObjectPool : Singleton<ObjectPool>
         {
             var objectForPool = Instantiate(poolObject);
             objectForPool.gameObject.SetActive(false);
+            objectForPool.transform.SetParent(transform);
             pool.Add(objectForPool);
         }
     }

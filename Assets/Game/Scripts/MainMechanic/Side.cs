@@ -98,19 +98,19 @@ public class Side : MonoBehaviour
     }
     private void OnTriggerEnter(Collider other)
     {
-        if (other.name == "Gate")
+        if (other.CompareTag("Gate"))
         {
-            ShuffleManager.Instance.AddSuitcase(this, 5);
-        }
+            if (other.name == "BombGate")
+            {
+                ShuffleManager.Instance.AddBomb(this, 1);
+                return;
+            }
 
-        if(other.name == "NegativeGate")
-        {
-            ShuffleManager.Instance.RemoveSuitcase(this, 5);
-        }
-
-        if (other.name == "BombGate")
-        {
-            ShuffleManager.Instance.AddBomb(this, 1);
+            int amount = int.Parse(other.name);
+            if (amount > 0)
+                ShuffleManager.Instance.AddSuitcase(this, amount);
+            else
+                ShuffleManager.Instance.RemoveSuitcase(this, -amount);
         }
         /*
         else if (other.gameObject.CompareTag("TimeForStairs"))
