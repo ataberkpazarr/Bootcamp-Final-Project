@@ -85,6 +85,17 @@ public class ShuffleManager : Singleton<ShuffleManager>
         isRightDragStopped = true;
     }
 
+    public int GetTotalAmountOfRightCases()
+    {
+        return rightSideSuitcases.Count;
+    }
+
+    public int GetTotalAmountOfLeftCases()
+    {
+        return leftSideSuitcases.Count;
+
+    }
+
 
     private void MoveFromLeftToRight()
     {

@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using DG.Tweening;
 
 public class Side : MonoBehaviour
 {
@@ -11,17 +12,75 @@ public class Side : MonoBehaviour
     private int currentChild=0;
     private GameObject currentParentStair;
 
+    private bool leftSide;
+
+    private void Start()
+    {
+        if (transform.position.x <0) //Left
+        {
+            leftSide = true;
+        }
+
+        else if (transform.position.x>0) //right
+        {
+            leftSide = false;
+
+        }
+    }
+
     private void Update()
     {
         if (TimeToSpawnStairs)
         {
-            if (transform.position.z >nextTargetPos.z)
+            if (leftSide)
             {
-            nextTargetPos = transform.position + new Vector3(0,0,1.3f);
-                currentParentStair.transform.GetChild(currentChild).gameObject.SetActive(true) ;
-                currentChild++;
+                if (transform.position.z > nextTargetPos.z)
+                {
+                    if (ShuffleManager.Instance.GetTotalAmountOfLeftCases() > 0)
+                    {
+                        nextTargetPos = transform.position + new Vector3(0, 0, 1.3f);
+                        GameObject g = currentParentStair.transform.GetChild(currentChild).gameObject;
+                        g.SetActive(true);
+                        g.transform.DOPunchScale(Vector3.one / 2, 0.25f, 2, 0.5f);
+                        ShuffleManager.Instance.RemoveSuitcase(this, 1);
+                        currentChild++;
+                    }
 
+                    else // no case 
+                    {
+                        GameManager.Instance.GameOver();
+
+                    }
+
+
+                }
             }
+
+            else //right side
+            {
+                if (transform.position.z > nextTargetPos.z)
+                {
+                    if (ShuffleManager.Instance.GetTotalAmountOfRightCases() > 0)
+                    {
+                        nextTargetPos = transform.position + new Vector3(0, 0, 1.3f);
+                        GameObject g = currentParentStair.transform.GetChild(currentChild).gameObject;
+                        g.SetActive(true);
+                        g.transform.DOPunchScale(Vector3.one / 2, 0.25f, 2, 0.5f);
+                        ShuffleManager.Instance.RemoveSuitcase(this,1);
+                        currentChild++;
+                    }
+
+                    else // no case remained
+                    {
+                        GameManager.Instance.GameOver();
+                    }
+                    
+
+                }
+            }
+         
+
+          
             if (currentChild== currentParentStair.transform.childCount-1)
             {
                 TimeToSpawnStairs = false;
