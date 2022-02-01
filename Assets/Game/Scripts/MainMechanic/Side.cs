@@ -17,7 +17,7 @@ public class Side : MonoBehaviour
         {
             if (transform.position.z >nextTargetPos.z)
             {
-            nextTargetPos = transform.position + new Vector3(0,0,1.2f);
+            nextTargetPos = transform.position + new Vector3(0,0,1.3f);
                 currentParentStair.transform.GetChild(currentChild).gameObject.SetActive(true) ;
                 currentChild++;
 
@@ -65,7 +65,7 @@ public class Side : MonoBehaviour
         else if (other.gameObject.CompareTag("Stair"))
         {
             TimeToSpawnStairs = true;
-            nextTargetPos = transform.position + new Vector3(0, 0, 1.2f);
+            nextTargetPos = transform.position + new Vector3(0, 0, 1.5f);
             currentParentStair = other.gameObject;
             currentChild=1;
 
