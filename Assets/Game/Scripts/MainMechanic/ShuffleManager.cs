@@ -410,6 +410,27 @@ public class ShuffleManager : Singleton<ShuffleManager>
             }
         }
     }
+
+    public void RemoveSuitcaseFromBottom(Side side, int suitcaseAmount)
+    {
+        if (side.transform.position.x < 0 && leftSideSuitcases.Any())// left side
+        {
+            ObjectPool.Instance.PullBackTheObject(leftSideSuitcases[0]);// pool a geri dön
+            leftSideSuitcases.RemoveAt(0);
+            GameObject g = side.transform.GetChild(1).gameObject;
+            g.transform.DOLocalMoveY(g.transform.position.y - 0.3f, animationSpeed);
+        
+        }
+        else if (side.transform.position.x > 0 && rightSideSuitcases.Any())// right side
+        {
+            ObjectPool.Instance.PullBackTheObject(rightSideSuitcases[0]);
+            rightSideSuitcases.RemoveAt(0);
+            GameObject g = side.transform.GetChild(1).gameObject;
+            g.transform.DOLocalMoveY(g.transform.position.y - 0.3f, animationSpeed);
+
+           
+        }
+    }
     #endregion
 
     #region Bomb Methods

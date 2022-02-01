@@ -42,7 +42,9 @@ public class Side : MonoBehaviour
                         GameObject g = currentParentStair.transform.GetChild(currentChild).gameObject;
                         g.SetActive(true);
                         g.transform.DOPunchScale(Vector3.one / 2, 0.25f, 2, 0.5f);
-                        ShuffleManager.Instance.RemoveSuitcase(this, 1);
+                        ShuffleManager.Instance.RemoveSuitcaseFromBottom(this, 1);
+                        //StartCoroutine(ShuffleManager.Instance.RemoveSuitcaseRoutine(this, 1));
+
                         currentChild++;
                     }
 
@@ -66,7 +68,9 @@ public class Side : MonoBehaviour
                         GameObject g = currentParentStair.transform.GetChild(currentChild).gameObject;
                         g.SetActive(true);
                         g.transform.DOPunchScale(Vector3.one / 2, 0.25f, 2, 0.5f);
-                        ShuffleManager.Instance.RemoveSuitcase(this,1);
+                        ShuffleManager.Instance.RemoveSuitcaseFromBottom(this,1);
+                        //StartCoroutine(ShuffleManager.Instance.RemoveSuitcaseRoutine(this,1));
+
                         currentChild++;
                     }
 
@@ -90,10 +94,7 @@ public class Side : MonoBehaviour
             //StartCoroutine(InstantiateSteps());
         }
 
-        else if (true)
-        {
-
-        }
+      
     }
     private void OnTriggerEnter(Collider other)
     {
