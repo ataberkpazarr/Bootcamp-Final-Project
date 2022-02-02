@@ -1,24 +1,35 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class GameManager : Singleton<GameManager>
 {
-    // Start is called before the first frame update
+    public static UnityAction ActionGameStart, ActionGameOver, ActionLevelPassed;
+
     void Start()
     {
         
     }
 
-    // Update is called once per frame
     void Update()
     {
         
     }
 
-    public void GameOver()
+    private void GameOver()
     {
 
         //do game over
+    }
+
+    public void LoadNextLevel()
+    {
+
+    }
+
+    public void RestartLevel()
+    {
+
     }
 }

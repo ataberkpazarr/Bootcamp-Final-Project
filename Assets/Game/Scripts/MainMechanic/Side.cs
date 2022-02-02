@@ -6,7 +6,6 @@ using DG.Tweening;
 [SelectionBase]
 public class Side : MonoBehaviour
 {
-
     [SerializeField] private GameObject stairPrefabToSpawn;
     private bool TimeToSpawnStairs=false;
     private Vector3 nextTargetPos;
@@ -51,7 +50,7 @@ public class Side : MonoBehaviour
 
                     else // no case 
                     {
-                        GameManager.Instance.GameOver();
+                        GameManager.ActionGameOver?.Invoke();
 
                     }
 
@@ -77,7 +76,7 @@ public class Side : MonoBehaviour
 
                     else // no case remained
                     {
-                        GameManager.Instance.GameOver();
+                        GameManager.ActionGameOver?.Invoke();
                     }
                     
 

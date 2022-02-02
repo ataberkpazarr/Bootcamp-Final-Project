@@ -31,7 +31,8 @@ public class ShuffleManager : Singleton<ShuffleManager>
     private GameObject currentShufflingObject;
     private float currentObjectEulerZ;
     private Sequence leftParabolaSeq, rightPrabolaSeq;
-
+    // for money manager
+    private int CurrentSuitcaseAmount => leftSideSuitcases.Count + rightSideSuitcases.Count;
 
     private void OnEnable()
     {
@@ -47,6 +48,7 @@ public class ShuffleManager : Singleton<ShuffleManager>
     private void Start()
     {
         UpdateParabolaVertexPos();
+        MoneyManager.Instance.UpdateMoney(CurrentSuitcaseAmount);
     }
 
     private void OnDisable()
@@ -383,6 +385,8 @@ public class ShuffleManager : Singleton<ShuffleManager>
                 newSuitcase.transform.DOPunchScale(Vector3.one / 2, 0.25f, 2, 0.5f);
             }
         }
+
+        MoneyManager.Instance.UpdateMoney(CurrentSuitcaseAmount);
     }
 
     public void RemoveSuitcase(Side side, int suitcaseAmount)
@@ -409,6 +413,8 @@ public class ShuffleManager : Singleton<ShuffleManager>
                 rightSideSuitcases.RemoveAt(i);
             }
         }
+
+        MoneyManager.Instance.UpdateMoney(CurrentSuitcaseAmount);
     }
 
     public void RemoveSuitcaseFromBottom(Side side)
@@ -426,10 +432,10 @@ public class ShuffleManager : Singleton<ShuffleManager>
             ObjectPool.Instance.PullBackTheObject(rightSideSuitcases[0]);
             rightSideSuitcases.RemoveAt(0);
             GameObject g = side.transform.GetChild(1).gameObject;
-            g.transform.DOLocalMoveY(g.transform.position.y - 0.3f, animationSpeed);
-
-           
+            g.transform.DOLocalMoveY(g.transform.position.y - 0.3f, animationSpeed);     
         }
+
+        MoneyManager.Instance.UpdateMoney(CurrentSuitcaseAmount);
     }
     #endregion
 
@@ -594,6 +600,8 @@ public class ShuffleManager : Singleton<ShuffleManager>
             StartCoroutine(RefreshPositions(leftSideSuitcases));
         else if (explosionPosX > 0)
             StartCoroutine(RefreshPositions(rightSideSuitcases));
+
+        MoneyManager.Instance.UpdateMoney(CurrentSuitcaseAmount);
     }
 
     private IEnumerator RefreshPositions(List<GameObject> sideToRefresh)
