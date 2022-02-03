@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using DG.Tweening;
+using System;
 
 [SelectionBase]
 public class Side : MonoBehaviour
@@ -13,6 +14,8 @@ public class Side : MonoBehaviour
     private GameObject currentParentStair;
 
     private bool leftSide;
+
+    public static Action<Side> TimeForStair;
 
     private void Start()
     {
@@ -42,7 +45,9 @@ public class Side : MonoBehaviour
                         GameObject g = currentParentStair.transform.GetChild(currentChild).gameObject;
                         g.SetActive(true);
                         g.transform.DOPunchScale(Vector3.one / 2, 0.25f, 2, 0.5f);
-                        ShuffleManager.Instance.RemoveSuitcaseFromBottom(this);
+                        //ShuffleManager.Instance.RemoveSuitcaseFromBottom(this);
+                        ShuffleManager.Instance.RemoveSuitcaseFromBottomVersion2(this);
+
                         //StartCoroutine(ShuffleManager.Instance.RemoveSuitcaseRoutine(this, 1));
 
                         currentChild++;
@@ -68,7 +73,9 @@ public class Side : MonoBehaviour
                         GameObject g = currentParentStair.transform.GetChild(currentChild).gameObject;
                         g.SetActive(true);
                         g.transform.DOPunchScale(Vector3.one / 2, 0.25f, 2, 0.5f);
-                        ShuffleManager.Instance.RemoveSuitcaseFromBottom(this);
+                        //ShuffleManager.Instance.RemoveSuitcaseFromBottom(this);
+                        ShuffleManager.Instance.RemoveSuitcaseFromBottomVersion2(this);
+
                         //StartCoroutine(ShuffleManager.Instance.RemoveSuitcaseRoutine(this,1));
 
                         currentChild++;
@@ -88,6 +95,7 @@ public class Side : MonoBehaviour
             if (currentChild== currentParentStair.transform.childCount-1)
             {
                 TimeToSpawnStairs = false;
+                ShuffleManager.Instance.FixPossiblePositionErrorsAfterBridge(this,0);
 
             }
             
@@ -128,6 +136,7 @@ public class Side : MonoBehaviour
             nextTargetPos = transform.position + new Vector3(0, 0, 1.5f);
             currentParentStair = other.gameObject;
             currentChild=1;
+            TimeForStair.Invoke(this);
 
         }
     }

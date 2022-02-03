@@ -34,6 +34,11 @@ public class ShuffleManager : Singleton<ShuffleManager>
     // for money manager
     private int CurrentSuitcaseAmount => leftSideSuitcases.Count + rightSideSuitcases.Count;
 
+    private bool timeForStair=false;
+    private bool activeLeftStair = false;
+    private bool activeRightStair = false;
+
+
     private void OnEnable()
     {
         SwipeManager.rightSwiped += HandleRightSlide;
@@ -42,6 +47,7 @@ public class ShuffleManager : Singleton<ShuffleManager>
         SwipeManager.dragStarted += StartShuffle;
         SwipeManager.leftDragStopped += StopLeftShuffle;
         SwipeManager.rightDragStopped += StopRightShuffle;
+        Side.TimeForStair += LetItDoStair;
 
     }
 
@@ -57,6 +63,9 @@ public class ShuffleManager : Singleton<ShuffleManager>
         SwipeManager.leftSwiped -= HandleLeftSlide;
         SwipeManager.dragStopped -= StopShuffle;
         SwipeManager.dragStarted -= StartShuffle;
+        SwipeManager.leftDragStopped -= StopLeftShuffle;
+        SwipeManager.rightDragStopped -= StopRightShuffle;
+        Side.TimeForStair -= LetItDoStair;
     }
 
     private void StopShuffle()
@@ -98,11 +107,23 @@ public class ShuffleManager : Singleton<ShuffleManager>
 
     }
 
+    private void LetItDoStair(Side side)
+    {
+        timeForStair = true;
+        if (side.transform.position.x<0) //left
+        {
+            activeLeftStair = true;
+        }
+        else // right
+        {
+            activeRightStair = true;
+        }
+    }
 
     private void MoveFromLeftToRight()
     {
         //if (leftSideSuitcases.Count > 0 && !isDragStopoped)
-        if (leftSideSuitcases.Count > 0 && !isRightDragStopped)
+        if (leftSideSuitcases.Count > 0 && !isRightDragStopped &&!activeLeftStair)
         {
             rightPrabolaSeq.Kill();
 
@@ -162,7 +183,31 @@ public class ShuffleManager : Singleton<ShuffleManager>
             rightSideSuitcases.Add(currentShufflingObject);
             currentShufflingObject.transform.SetParent(rightSideSuitcasesRoot.transform.parent);// parent'ı Side objesi oldu(bomba olayında gerekliydi)
 
-            leftParabolaSeq.Play().OnComplete(MoveFromLeftToRight); 
+            /// bridge shuffle error fix trials
+            //////leftParabolaSeq.Play().OnComplete(MoveFromLeftToRight);
+            //leftParabolaSeq.Play().OnComplete(()=>FixPosition(currentShufflingObject,rightSideSuitcases)).OnStepComplete(MoveFromLeftToRight);
+            //leftParabolaSeq.Play().OnComplete(() => FixPosition(currentShufflingObject, rightSideSuitcases)).OnComplete(MoveFromLeftToRight);
+            ///////////leftParabolaSeq.Play().OnComplete(MoveFromLeftToRight).OnStepComplete(() => FixPosition(currentShufflingObject, rightSideSuitcases));
+            //leftParabolaSeq.Play().OnStepComplete(MoveFromLeftToRight).OnStepComplete(() => FixPosition(currentShufflingObject, rightSideSuitcases));
+
+
+
+            //leftParabolaSeq.Play().OnComplete(() => StartCoroutine(FixPositionRoutine(currentShufflingObject, rightSideSuitcases))).OnStepComplete(MoveFromLeftToRight);
+
+
+            
+            if (timeForStair)
+            {
+
+                leftParabolaSeq.Play().OnComplete(MoveFromLeftToRight).OnStepComplete(() => FixPosition(currentShufflingObject, rightSideSuitcases));
+
+            }
+            else
+            {
+                leftParabolaSeq.Play().OnComplete(MoveFromLeftToRight);
+
+            }
+            
             /////////////////////////////////leftParabolaSeq.Play().OnComplete(MoveFromLeftToRight).OnStepComplete(() => leftParabolaSeq.Kill()); mantıklı olabilir
             ///
             ////////////leftParabolaSeq.Play().OnComplete(() => leftParabolaSeq.Kill()).OnStepComplete(() => { currentShufflingObject = null; MoveFromLeftToRight(); });
@@ -176,6 +221,23 @@ public class ShuffleManager : Singleton<ShuffleManager>
         }
     }
 
+    private void FixPosition(GameObject newlyAddedCase,List<GameObject> suitcases)
+    {
+        if (suitcases.Last().transform.position.y - suitcases[suitcases.Count - 2].transform.position.y > 0.3f)
+        {
+            newlyAddedCase.transform.DOMoveY(newlyAddedCase.transform.position.y - 0.3f, animationSpeed / suitcases.Count);
+        }
+
+    }
+    private IEnumerator FixPositionRoutine(GameObject newlyAddedCase, List<GameObject> suitcases)
+    {
+        yield return new WaitForSeconds(0.2f);
+        if (suitcases.Last().transform.position.y - suitcases[suitcases.Count - 2].transform.position.y > 0.3f)
+        {
+            newlyAddedCase.transform.DOMoveY(newlyAddedCase.transform.position.y - 0.3f, animationSpeed / suitcases.Count);
+        }
+
+    }
     private void FixScaleAndRotationOfNewJoinedSuitcase(GameObject g, float f)
     {
 
@@ -199,10 +261,66 @@ public class ShuffleManager : Singleton<ShuffleManager>
 
     }
 
+    public void FixPossiblePositionErrorsAfterBridge(Side side, int k)
+    {
+        // bu olurken sagdan sola, soldan saga atmaya izin vermiyoruz 
+        timeForStair = false;
+        activeRightStair = true;
+        activeLeftStair = true;
+
+        
+        if (side.transform.position.x<0) // left
+        {
+            
+            for (int i = 0; i < leftSideSuitcases.Count; i++)
+            {
+                if (i==0)
+                {
+                    GameObject g = leftSideSuitcases[i].gameObject;
+                    g.transform.DOMoveY(leftSideSuitcasesRoot.transform.position.y,animationSpeed);
+
+                }
+                else
+                {
+                    GameObject g = leftSideSuitcases[i].gameObject;
+                    g.transform.DOMoveY(leftSideSuitcasesRoot.transform.position.y+(i*0.3f), animationSpeed);
+
+                }
+
+            }
+        }
+        else // right
+        {
+            for (int i = 0; i < rightSideSuitcases.Count; i++)
+            {
+                if (i == 0)
+                {
+                    GameObject g = rightSideSuitcases[i].gameObject;
+                    g.transform.DOMoveY(rightSideSuitcasesRoot.transform.position.y, animationSpeed);
+
+                }
+                else
+                {
+                    GameObject g = rightSideSuitcases[i].gameObject;
+                    g.transform.DOMoveY(rightSideSuitcasesRoot.transform.position.y + (i * 0.3f), animationSpeed);
+
+                }
+
+            }
+        }
+
+
+        activeRightStair = false;
+        activeLeftStair = false;
+
+
+
+    }
+
     private void MoveFromRightToLeft()
     {
         //if (rightSideSuitcases.Count > 0 && !isDragStopoped)
-        if (rightSideSuitcases.Count > 0 && !isLeftDragStopped)
+        if (rightSideSuitcases.Count > 0 && !isLeftDragStopped &&!activeRightStair)
         {
             leftParabolaSeq.Kill();
 
@@ -265,7 +383,40 @@ public class ShuffleManager : Singleton<ShuffleManager>
             currentShufflingObject.transform.SetParent(leftSideSuitcasesRoot.transform.parent);
             //parabolaSeq.Play();
             ///////////////////////////////////rightPrabolaSeq.Play().OnComplete(MoveFromRightToLeft).OnStepComplete(() => rightPrabolaSeq.Kill()); bu da mantıklı olabilir dursun
-            rightPrabolaSeq.Play().OnComplete(MoveFromRightToLeft);
+            ///if   
+
+
+            /// bridge shuffle error fix trials
+            /////////rightPrabolaSeq.Play().OnComplete(MoveFromRightToLeft);
+            //rightPrabolaSeq.Play().OnComplete(() => FixPosition(currentShufflingObject, leftSideSuitcases)).OnStepComplete(MoveFromRightToLeft);
+            //rightPrabolaSeq.Play().OnComplete(() => FixPosition(currentShufflingObject, leftSideSuitcases)).OnComplete(MoveFromRightToLeft);
+            //rightPrabolaSeq.Play().OnStepComplete(MoveFromRightToLeft).OnStepComplete(() => FixPosition(currentShufflingObject, leftSideSuitcases));
+
+
+            //rightPrabolaSeq.Play().OnComplete(() => StartCoroutine(FixPositionRoutine(currentShufflingObject, leftSideSuitcases))).OnStepComplete(MoveFromRightToLeft);
+
+            if (timeForStair)
+            {
+                rightPrabolaSeq.Play().OnComplete(MoveFromRightToLeft).OnStepComplete(() => FixPosition(currentShufflingObject, leftSideSuitcases));
+
+            }
+            else
+            {
+                rightPrabolaSeq.Play().OnComplete(MoveFromRightToLeft);
+            }
+
+            /*
+            if (!timeForStair)
+            {
+                rightPrabolaSeq.Play().OnComplete(MoveFromRightToLeft);
+
+            }
+            else
+             {
+                rightPrabolaSeq.Play().OnComplete(()=>StartCoroutine(RightToLeftRoutine()));
+
+              }
+            */
 
             //////////////////////////////////rightPrabolaSeq.Play().OnComplete(() => rightPrabolaSeq.Kill()).OnStepComplete(() => { currentShufflingObject = null; MoveFromRightToLeft(); });
             ///////////////rightPrabolaSeq.Play().OnComplete(() => { currentShufflingObject = null; MoveFromRightToLeft(); }).OnStepComplete(() => rightPrabolaSeq.Kill());
@@ -277,14 +428,14 @@ public class ShuffleManager : Singleton<ShuffleManager>
 
     private IEnumerator RightToLeftRoutine()
     {
-        yield return new WaitForSeconds(1f);
+        yield return new WaitForSeconds(0.3f);
         MoveFromRightToLeft();
 
     }
 
     private IEnumerator LeftToRightRoutine()
     {
-        yield return new WaitForSeconds(1f);
+        yield return new WaitForSeconds(0.3f);
         MoveFromLeftToRight();
 
     }
@@ -436,6 +587,118 @@ public class ShuffleManager : Singleton<ShuffleManager>
         }
 
         MoneyManager.Instance.UpdateMoney(CurrentSuitcaseAmount);
+    }
+    public void RemoveSuitcaseFromBottomVersion2(Side side)
+    {
+        if (side.transform.position.x < 0 && leftSideSuitcases.Any())// left side
+        {
+            ObjectPool.Instance.PullBackTheObject(leftSideSuitcases[0]);// pool a geri dön
+            leftSideSuitcases.RemoveAt(0);
+            //GameObject g = side.transform.GetChild(1).gameObject;
+            //g.transform.DOLocalMoveY(g.transform.position.y - 0.3f, animationSpeed);
+            RefreshPositionsVersion2(side);
+
+            for (int i = 0; i < leftSideSuitcases.Count; i++)
+            {
+                GameObject g = leftSideSuitcases[i];
+                g.transform.DOMoveY(g.transform.position.y - 0.3f, animationSpeed/ leftSideSuitcases.Count);
+                //RefreshPositionsVersion2(side);
+
+            }
+            RefreshPositionsVersion2(side);
+
+            //RefreshPositions(leftSideSuitcases);
+        }
+        else if (side.transform.position.x > 0 && rightSideSuitcases.Any())// right side
+        {
+            ObjectPool.Instance.PullBackTheObject(rightSideSuitcases[0]);
+            rightSideSuitcases.RemoveAt(0);
+            //GameObject g = side.transform.GetChild(1).gameObject;
+            //g.transform.DOLocalMoveY(g.transform.position.y - 0.3f, animationSpeed);
+            RefreshPositionsVersion2(side);
+
+            for (int i = 0; i < rightSideSuitcases.Count; i++)
+            {
+                GameObject g = rightSideSuitcases[i];
+                g.transform.DOMoveY(g.transform.position.y - 0.3f, animationSpeed/rightSideSuitcases.Count);
+                //RefreshPositionsVersion2(side);
+
+
+            }
+            RefreshPositionsVersion2(side);
+
+            //RefreshPositions(rightSideSuitcases);
+
+
+        }
+
+
+    }
+    private void RefreshPositionsVersion2(Side side)
+    {
+        if (side.transform.position.x < 0) //left side
+        {
+            
+            if (leftSideSuitcases.Last().transform.position.y - leftSideSuitcases[leftSideSuitcases.Count - 2].transform.position.y > 0.3f)
+            {
+                Debug.Log("aaaaaa");
+                GameObject g = leftSideSuitcases.Last();
+
+                g.transform.DOMoveY(g.transform.position.y - 0.3f, animationSpeed / leftSideSuitcases.Count*2);
+
+
+                Vector3 newPos = new Vector3(0, g.transform.position.y - 0.3f, 0);
+                //g.transform.DOBlendableMoveBy(newPos, animationSpeed / 5);
+                //g.transform.DOMove(newPos,animationSpeed/5);
+            }
+            
+           /*
+
+          for (int i = 0; i < leftSideSuitcases.Count-2; i++)
+          {
+              if (leftSideSuitcases[i+1].transform.position.y - leftSideSuitcases[i].transform.position.y >0.3f)
+              {
+                  GameObject g = leftSideSuitcases[i+1];
+                  g.transform.DOMoveY(g.transform.position.y - 0.3f, animationSpeed/4);
+              }
+           
+                    //GameObject g = leftSideSuitcases[i];
+                    //g.transform.DOMoveY(g.transform.position.y - 0.3f, animationSpeed);
+           }*/
+
+        }
+        else if (side.transform.position.x > 0) // right side
+        {
+            
+            if (rightSideSuitcases.Last().transform.position.y - rightSideSuitcases[rightSideSuitcases.Count - 2].transform.position.y > 0.3f)
+            {
+                Debug.Log("aaaaaa");
+
+                GameObject g = rightSideSuitcases.Last();
+                g.transform.DOMoveY(g.transform.position.y - 0.3f, animationSpeed / rightSideSuitcases.Count * 2);
+                Vector3 newPos = new Vector3(0, g.transform.position.y - 0.3f, 0);
+                //g.transform.DOBlendableMoveBy(newPos,animationSpeed/5);
+                //g.transform.DOMove(newPos, animationSpeed / 5);
+
+            }
+
+            /*
+            for (int i = 0; i < rightSideSuitcases.Count - 2; i++)
+            {
+                if (rightSideSuitcases[i+1].transform.position.y - rightSideSuitcases[i].transform.position.y > 0.3f)
+                {
+                    GameObject g = rightSideSuitcases[i+1];
+                    g.transform.DOMoveY(g.transform.position.y - 0.3f, animationSpeed / 4);
+                }
+                //GameObject g = rightSideSuitcases[i];
+                //g.transform.DOMoveY(g.transform.position.y - 0.3f, animationSpeed);
+              
+            }
+            */
+
+
+        }
+
     }
     #endregion
 
