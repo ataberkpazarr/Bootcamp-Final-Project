@@ -50,10 +50,7 @@ public class Side : MonoBehaviour
                         GameObject g = currentParentStair.transform.GetChild(currentChild).gameObject;
                         g.SetActive(true);
                         g.transform.DOPunchScale(Vector3.one / 2, 0.25f, 2, 0.5f);
-                        //ShuffleManager.Instance.RemoveSuitcaseFromBottom(this);
                         ShuffleManager.Instance.RemoveSuitcaseFromBottomVersion2(this);
-
-                        //StartCoroutine(ShuffleManager.Instance.RemoveSuitcaseRoutine(this, 1));
 
                         currentChild++;
                     }
@@ -74,10 +71,9 @@ public class Side : MonoBehaviour
                         GameObject g = currentParentStair.transform.GetChild(currentChild).gameObject;
                         g.SetActive(true);
                         g.transform.DOPunchScale(Vector3.one / 2, 0.25f, 2, 0.5f);
-                        //ShuffleManager.Instance.RemoveSuitcaseFromBottom(this);
                         ShuffleManager.Instance.RemoveSuitcaseFromBottomVersion2(this);
 
-                        //StartCoroutine(ShuffleManager.Instance.RemoveSuitcaseRoutine(this,1));
+  
 
                         currentChild++;
                     }
@@ -93,11 +89,11 @@ public class Side : MonoBehaviour
             if (currentChild == currentParentStair.transform.childCount - 1)
             {
                 TimeToSpawnStairs = false;
-                ShuffleManager.Instance.FixPossiblePositionErrorsAfterBridge(this, 0);
+                ShuffleManager.Instance.FixPossiblePositionErrorsAfterBridge(this);
 
             }
 
-            //StartCoroutine(InstantiateSteps());
+        
         }
     }
 
@@ -117,16 +113,7 @@ public class Side : MonoBehaviour
             else
                 ShuffleManager.Instance.RemoveSuitcase(this, -amount);
         }
-        /*
-        else if (other.gameObject.CompareTag("TimeForStairs"))
-        {
-            TimeToSpawnStairs = true;
-        }
-
-        else if (other.gameObject.CompareTag("TimeToEndStairs"))
-        {
-            TimeToSpawnStairs = false;
-        }*/
+ 
         else if (other.gameObject.CompareTag("Stair"))
         {
             TimeToSpawnStairs = true;
