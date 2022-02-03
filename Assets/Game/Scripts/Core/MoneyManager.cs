@@ -20,7 +20,7 @@ public class MoneyManager : Singleton<MoneyManager>
     public void UpdateMoney(int amount)
     {
         _currentEarning = amount * earnPerSuitcase;
-        print(CurrentEarning);
+        // update InGame ui
     }
 
     public void SaveMoney()

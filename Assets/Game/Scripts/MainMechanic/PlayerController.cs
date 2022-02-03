@@ -16,6 +16,8 @@ public class PlayerController : MonoBehaviour
 
     void Update()
     {
+        if (!GameManager.Instance.IsGameStarted) return;
+
         MoveForward();
         //GetSlideInput();
         //HandleSlideInput();

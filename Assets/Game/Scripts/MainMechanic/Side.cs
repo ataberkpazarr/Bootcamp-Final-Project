@@ -33,6 +33,11 @@ public class Side : MonoBehaviour
 
     private void Update()
     {
+        HandleWithBridge();
+    }
+
+    private void HandleWithBridge()
+    {
         if (TimeToSpawnStairs)
         {
             if (leftSide)
@@ -52,17 +57,13 @@ public class Side : MonoBehaviour
 
                         currentChild++;
                     }
-
                     else // no case 
                     {
                         GameManager.ActionGameOver?.Invoke();
 
                     }
-
-
                 }
             }
-
             else //right side
             {
                 if (transform.position.z > nextTargetPos.z)
@@ -80,30 +81,26 @@ public class Side : MonoBehaviour
 
                         currentChild++;
                     }
-
                     else // no case remained
                     {
                         GameManager.ActionGameOver?.Invoke();
                     }
-                    
-
                 }
             }
-         
 
-          
-            if (currentChild== currentParentStair.transform.childCount-1)
+
+
+            if (currentChild == currentParentStair.transform.childCount - 1)
             {
                 TimeToSpawnStairs = false;
-                ShuffleManager.Instance.FixPossiblePositionErrorsAfterBridge(this,0);
+                ShuffleManager.Instance.FixPossiblePositionErrorsAfterBridge(this, 0);
 
             }
-            
+
             //StartCoroutine(InstantiateSteps());
         }
-
-      
     }
+
     private void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("Gate"))

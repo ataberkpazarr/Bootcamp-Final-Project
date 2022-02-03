@@ -90,7 +90,6 @@ public class ShuffleManager : Singleton<ShuffleManager>
         isLeftDragStopped = true;
     }
 
-
     private void StopRightShuffle()
     {
         isRightDragStopped = true;
@@ -104,7 +103,6 @@ public class ShuffleManager : Singleton<ShuffleManager>
     public int GetTotalAmountOfLeftCases()
     {
         return leftSideSuitcases.Count;
-
     }
 
     private void LetItDoStair(Side side)
@@ -165,7 +163,7 @@ public class ShuffleManager : Singleton<ShuffleManager>
 
 
 
-            leftParabolaSeq.Join(currentShufflingObject.transform.DORotate(new Vector3(0, 0, currentObjectEulerZ - 180), animationSpeed * 2)
+            leftParabolaSeq.Join(currentShufflingObject.transform.DORotate(new Vector3(0, currentShufflingObject.transform.eulerAngles.y, currentObjectEulerZ - 180), animationSpeed * 2)
                 .SetEase(Ease.InOutQuad)
                 .OnComplete(() => { currentShufflingObject?.transform.DOPunchScale(Vector3.one / 2, 0.25f, 2, 0.5f); })
                 );
@@ -365,7 +363,7 @@ public class ShuffleManager : Singleton<ShuffleManager>
             //rightPrabolaSeq.Append(currentShufflingObject?.transform.DOMoveX(newPos.x, animationSpeed).SetEase(Ease.OutQuad));
             //rightPrabolaSeq.Join(currentShufflingObject?.transform.DOMoveY(newPos.y, animationSpeed).SetEase(Ease.InQuad));
 
-            rightPrabolaSeq.Join(currentShufflingObject.transform.DORotate(new Vector3(0, 0, currentObjectEulerZ + 180), animationSpeed * 2)
+            rightPrabolaSeq.Join(currentShufflingObject.transform.DORotate(new Vector3(0, currentShufflingObject.transform.eulerAngles.y, currentObjectEulerZ + 180), animationSpeed * 2)
                 .SetEase(Ease.InOutQuad)
                 .OnComplete(() => { currentShufflingObject?.transform.DOPunchScale(Vector3.one / 2, 0.25f, 2, 0.5f); })
                 ); ;
@@ -588,6 +586,7 @@ public class ShuffleManager : Singleton<ShuffleManager>
 
         MoneyManager.Instance.UpdateMoney(CurrentSuitcaseAmount);
     }
+
     public void RemoveSuitcaseFromBottomVersion2(Side side)
     {
         if (side.transform.position.x < 0 && leftSideSuitcases.Any())// left side
@@ -596,7 +595,8 @@ public class ShuffleManager : Singleton<ShuffleManager>
             leftSideSuitcases.RemoveAt(0);
             //GameObject g = side.transform.GetChild(1).gameObject;
             //g.transform.DOLocalMoveY(g.transform.position.y - 0.3f, animationSpeed);
-            RefreshPositionsVersion2(side);
+            //RefreshPositionsVersion2(side);
+            StartCoroutine(RefreshPositions(leftSideSuitcases, 0f));
 
             for (int i = 0; i < leftSideSuitcases.Count; i++)
             {
@@ -605,7 +605,8 @@ public class ShuffleManager : Singleton<ShuffleManager>
                 //RefreshPositionsVersion2(side);
 
             }
-            RefreshPositionsVersion2(side);
+            //RefreshPositionsVersion2(side);
+            StartCoroutine(RefreshPositions(leftSideSuitcases, 0f));
 
             //RefreshPositions(leftSideSuitcases);
         }
@@ -615,7 +616,8 @@ public class ShuffleManager : Singleton<ShuffleManager>
             rightSideSuitcases.RemoveAt(0);
             //GameObject g = side.transform.GetChild(1).gameObject;
             //g.transform.DOLocalMoveY(g.transform.position.y - 0.3f, animationSpeed);
-            RefreshPositionsVersion2(side);
+            //RefreshPositionsVersion2(side);
+            StartCoroutine(RefreshPositions(rightSideSuitcases, 0f));
 
             for (int i = 0; i < rightSideSuitcases.Count; i++)
             {
@@ -625,15 +627,15 @@ public class ShuffleManager : Singleton<ShuffleManager>
 
 
             }
-            RefreshPositionsVersion2(side);
+            //RefreshPositionsVersion2(side);
+            StartCoroutine(RefreshPositions(rightSideSuitcases, 0f));
 
             //RefreshPositions(rightSideSuitcases);
 
 
         }
-
-
     }
+
     private void RefreshPositionsVersion2(Side side)
     {
         if (side.transform.position.x < 0) //left side
@@ -643,10 +645,10 @@ public class ShuffleManager : Singleton<ShuffleManager>
             {
                 Debug.Log("aaaaaa");
                 GameObject g = leftSideSuitcases.Last();
-
+            
                 g.transform.DOMoveY(g.transform.position.y - 0.3f, animationSpeed / leftSideSuitcases.Count*2);
-
-
+            
+            
                 Vector3 newPos = new Vector3(0, g.transform.position.y - 0.3f, 0);
                 //g.transform.DOBlendableMoveBy(newPos, animationSpeed / 5);
                 //g.transform.DOMove(newPos,animationSpeed/5);
@@ -673,13 +675,13 @@ public class ShuffleManager : Singleton<ShuffleManager>
             if (rightSideSuitcases.Last().transform.position.y - rightSideSuitcases[rightSideSuitcases.Count - 2].transform.position.y > 0.3f)
             {
                 Debug.Log("aaaaaa");
-
+            
                 GameObject g = rightSideSuitcases.Last();
                 g.transform.DOMoveY(g.transform.position.y - 0.3f, animationSpeed / rightSideSuitcases.Count * 2);
                 Vector3 newPos = new Vector3(0, g.transform.position.y - 0.3f, 0);
                 //g.transform.DOBlendableMoveBy(newPos,animationSpeed/5);
                 //g.transform.DOMove(newPos, animationSpeed / 5);
-
+            
             }
 
             /*
@@ -695,8 +697,6 @@ public class ShuffleManager : Singleton<ShuffleManager>
               
             }
             */
-
-
         }
 
     }
@@ -860,16 +860,17 @@ public class ShuffleManager : Singleton<ShuffleManager>
         }
 
         if (explosionPosX < 0)
-            StartCoroutine(RefreshPositions(leftSideSuitcases));
+            StartCoroutine(RefreshPositions(leftSideSuitcases, 0.5f));
         else if (explosionPosX > 0)
-            StartCoroutine(RefreshPositions(rightSideSuitcases));
+            StartCoroutine(RefreshPositions(rightSideSuitcases, 0.5f));
 
         MoneyManager.Instance.UpdateMoney(CurrentSuitcaseAmount);
     }
+    #endregion
 
-    private IEnumerator RefreshPositions(List<GameObject> sideToRefresh)
+    private IEnumerator RefreshPositions(List<GameObject> sideToRefresh, float refreshDelta)
     {
-        yield return new WaitForSeconds(0.5f);
+        yield return new WaitForSeconds(refreshDelta);
 
         for (int i = 0; i < sideToRefresh.Count; i++)
         {
@@ -878,5 +879,4 @@ public class ShuffleManager : Singleton<ShuffleManager>
             sideToRefresh[i].transform.position = refreshedPos;
         }
     }
-    #endregion
 }
