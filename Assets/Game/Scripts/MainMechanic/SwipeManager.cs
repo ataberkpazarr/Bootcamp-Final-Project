@@ -47,21 +47,6 @@ public class SwipeManager : MonoBehaviour
             //Did we cross the distance?
             if (swipeDelta.magnitude > 150)
             {
-                ////Which direction?
-                //float x = swipeDelta.x;
-                ////Left or Right
-                //if (x < 0)
-                //{
-                //    leftSwiped.Invoke();
-                //    //StartCoroutine(LeftSwipeInvokeRoutine());
-                //    swipeLeft = true;
-                //}
-                //else
-                //{
-                //    rightSwiped.Invoke();
-                //    //StartCoroutine(RightSwipeInvokeRoutine());
-                //    swipeRight = true;
-                //}
                 firstTouch = false;
                 Reset();
             }

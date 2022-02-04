@@ -188,15 +188,7 @@ public class ShuffleManager : Singleton<ShuffleManager>
         }
 
     }
-    private IEnumerator FixPositionRoutine(GameObject newlyAddedCase, List<GameObject> suitcases)
-    {
-        yield return new WaitForSeconds(0.2f);
-        if (suitcases.Last().transform.position.y - suitcases[suitcases.Count - 2].transform.position.y > 0.3f)
-        {
-            newlyAddedCase.transform.DOMoveY(newlyAddedCase.transform.position.y - 0.3f, animationSpeed / suitcases.Count);
-        }
-
-    }
+ 
 
     public void FixPossiblePositionErrorsAfterBridge(Side side)
     {
@@ -310,19 +302,7 @@ public class ShuffleManager : Singleton<ShuffleManager>
         }
     }
 
-    private IEnumerator RightToLeftRoutine()
-    {
-        yield return new WaitForSeconds(0.3f);
-        MoveFromRightToLeft();
 
-    }
-
-    private IEnumerator LeftToRightRoutine()
-    {
-        yield return new WaitForSeconds(0.3f);
-        MoveFromLeftToRight();
-
-    }
 
     private void HandleLeftSlide()
     {
