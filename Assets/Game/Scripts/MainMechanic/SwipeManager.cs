@@ -19,6 +19,11 @@ public class SwipeManager : MonoBehaviour
     private float input;
     private Vector3 mouseRootPos;
 
+    private void OnEnable()
+    {
+        GameManager.ActionGameOver += DeactivateThis;
+    }
+
     private void Update()
     {
         if (!GameManager.Instance.IsGameStarted) return;
@@ -121,4 +126,13 @@ public class SwipeManager : MonoBehaviour
 
     }
 
+    private void DeactivateThis()
+    {
+        this.enabled = false;
+    }
+
+    private void OnDisable()
+    {
+        GameManager.ActionGameOver -= DeactivateThis;
+    }
 }

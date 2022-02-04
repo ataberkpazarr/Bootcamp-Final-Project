@@ -57,7 +57,6 @@ public class Side : MonoBehaviour
                     else // no case 
                     {
                         GameManager.ActionGameOver?.Invoke();
-
                     }
                 }
             }

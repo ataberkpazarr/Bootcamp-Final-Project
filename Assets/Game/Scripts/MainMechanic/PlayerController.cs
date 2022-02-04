@@ -8,11 +8,20 @@ public class PlayerController : MonoBehaviour
 {
     [Header("Specs")]
     [SerializeField] private float speed = 5f;
-
+    [Header("Components")]
+    [SerializeField] private Animator leftSideAnim;
+    [SerializeField] private Animator rightSideAnim;
     // inputs
     private Vector3 mouseRootPos;
     private float input;
 
+    private void OnEnable()
+    {
+        //SwipeManager.rightSwiped += HandleRightSlide;
+        //SwipeManager.leftSwiped += HandleLeftSlide;
+        GameManager.ActionGameStart += ActivateRunAnim;
+        GameManager.ActionGameOver += DeactivateThis;
+    }
 
     void Update()
     {
@@ -29,17 +38,23 @@ public class PlayerController : MonoBehaviour
         //transform.DOMove(transform.position+transform.forward,1f);
     }
 
-    private void OnEnable()
+    private void ActivateRunAnim()
     {
-        SwipeManager.rightSwiped += HandleRightSlide;
-        SwipeManager.leftSwiped += HandleLeftSlide;
+        leftSideAnim.SetTrigger("Run");
+        rightSideAnim.SetTrigger("Run");
+    }
 
+    private void DeactivateThis()
+    {
+        this.enabled = false;
     }
 
     private void OnDisable()
     {
-        SwipeManager.rightSwiped -= HandleRightSlide;
-        SwipeManager.leftSwiped -= HandleLeftSlide;
+        //SwipeManager.rightSwiped -= HandleRightSlide;
+        //SwipeManager.leftSwiped -= HandleLeftSlide;
+        GameManager.ActionGameStart -= ActivateRunAnim;
+        GameManager.ActionGameOver -= DeactivateThis;
     }
 
     private void HandleRightSlide()
