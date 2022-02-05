@@ -8,6 +8,8 @@ using System;
 public class Side : MonoBehaviour
 {
     [SerializeField] private GameObject stairPrefabToSpawn;
+    [SerializeField] private  Animator animator ;
+
     private bool TimeToSpawnStairs=false;
     private Vector3 nextTargetPos;
     private int currentChild=0;
@@ -57,6 +59,11 @@ public class Side : MonoBehaviour
                     else // no case 
                     {
                         GameManager.ActionGameOver?.Invoke();
+                        GameManager.Instance.GameOver(this.transform.position);
+                        GameObject g = transform.GetChild(0).gameObject;
+                        Animator animator_ = g.GetComponent<Animator>();
+                        animator_.SetBool("TimeToDie", true);
+                        TimeToSpawnStairs = false;
                     }
                 }
             }
@@ -79,6 +86,15 @@ public class Side : MonoBehaviour
                     else // no case remained
                     {
                         GameManager.ActionGameOver?.Invoke();
+                        GameManager.Instance.GameOver(this.transform.position);
+                        GameObject g = transform.GetChild(0).gameObject;
+                        Animator animator_ = g.GetComponent<Animator>();
+                        animator_.SetBool("TimeToDie",true);
+                        TimeToSpawnStairs = false;
+
+
+
+
                     }
                 }
             }
@@ -88,12 +104,19 @@ public class Side : MonoBehaviour
             if (currentChild == currentParentStair.transform.childCount - 1)
             {
                 TimeToSpawnStairs = false;
-                ShuffleManager.Instance.FixPossiblePositionErrorsAfterBridge(this);
-
+                StartCoroutine(FixPositionErrorRoutine());
             }
 
         
         }
+    }
+
+    private IEnumerator FixPositionErrorRoutine()
+    {
+        yield return new WaitForSeconds(0.2f);
+        ShuffleManager.Instance.FixPossiblePositionErrorsAfterBridge(this);
+
+
     }
 
     private void OnTriggerEnter(Collider other)

@@ -23,6 +23,7 @@ public class CanvasController : Singleton<CanvasController>
     {
         panelInGame.SetActive(false);
         panelGameOver.SetActive(true);
+
     }
 
     #region UI Buttons' Methods
