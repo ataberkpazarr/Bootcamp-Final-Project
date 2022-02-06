@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 705507994}
-  m_IndirectSpecularColor: {r: 0.18028378, g: 0.22571412, b: 0.30692285, a: 1}
+  m_IndirectSpecularColor: {r: 0.18028305, g: 0.22571313, b: 0.3069213, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -1665,45 +1665,6 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 92637327}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &92637329 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 7338213679603054314, guid: 3d08cf0bad0b44dc885de596d7ff90da,
-    type: 3}
-  m_PrefabInstance: {fileID: 92637327}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &92637330
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 92637329}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2fa609235ebe949d98a76325c0ad291c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  stairPrefabToSpawn: {fileID: 0}
-  animator: {fileID: 0}
---- !u!95 &92637333
-Animator:
-  serializedVersion: 3
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 92637329}
-  m_Enabled: 1
-  m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: 28c56abbb22b5924b8040521712e1172, type: 2}
-  m_CullingMode: 0
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 0
-  m_LinearVelocityBlending: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!4 &96902574 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 2934405035013404272, guid: ddd41b390f90045b7b4d4feb67c6b9b0,
@@ -2150,9 +2111,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bf66c690e7241a34d9a2bcd086ca0bd0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  CryParticle: {fileID: 1899990265956452, guid: 0c1dddd83199e4b4cb7a66329a7b18c0,
-    type: 3}
-  HappyParticle: {fileID: 180048, guid: 4a9bb31a555add44ba9d0dbc0c220e70, type: 3}
 --- !u!1001 &201148790
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2698,11 +2656,11 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 969466025}
-  m_RootOrder: 0
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -0.0000095367, y: -0.01001}
+  m_AnchoredPosition: {x: -0, y: -0.01001}
   m_SizeDelta: {x: 1280, y: 2560}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &372261329
@@ -5297,8 +5255,8 @@ RectTransform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
-  - {fileID: 372261328}
   - {fileID: 1604856237}
+  - {fileID: 372261328}
   - {fileID: 982611017}
   m_Father: {fileID: 1350106796}
   m_RootOrder: 2
@@ -7051,7 +7009,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1488052949}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 281.5}
+  m_LocalPosition: {x: 0, y: 0, z: 289.64}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 92637328}
@@ -7286,7 +7244,7 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 969466025}
-  m_RootOrder: 1
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0}
   m_AnchorMax: {x: 0.5, y: 0}
@@ -7523,26 +7481,6 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 83db33b110f924e63b082e753e6a77a0, type: 3}
---- !u!1 &1665377295 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 7338213679603054314, guid: 3d08cf0bad0b44dc885de596d7ff90da,
-    type: 3}
-  m_PrefabInstance: {fileID: 935334830}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &1665377297
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1665377295}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2fa609235ebe949d98a76325c0ad291c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  stairPrefabToSpawn: {fileID: 0}
-  animator: {fileID: 0}
 --- !u!1 &1720284057
 GameObject:
   m_ObjectHideFlags: 0

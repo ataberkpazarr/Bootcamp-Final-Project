@@ -8,7 +8,10 @@ using System;
 public class Side : MonoBehaviour
 {
     [SerializeField] private GameObject stairPrefabToSpawn;
-    [SerializeField] private  Animator animator ;
+    [Header("Animations & Effects")]
+    [SerializeField] private Animator animator;
+    [SerializeField] private GameObject cryParticle;
+    [SerializeField] private GameObject happyParticle;
 
     private bool TimeToSpawnStairs=false;
     private Vector3 nextTargetPos;
@@ -16,8 +19,13 @@ public class Side : MonoBehaviour
     private GameObject currentParentStair;
 
     private bool leftSide;
-
     public static Action<Side> TimeForStair;
+
+    private void OnEnable()
+    {
+        GameManager.ActionGameStart += ActivateRunAnim;
+        GameManager.ActionGameOver += ActivateGameOverEffects;
+    }
 
     private void Start()
     {
@@ -57,12 +65,8 @@ public class Side : MonoBehaviour
                         currentChild++;
                     }
                     else // no case 
-                    {
+                    {                        
                         GameManager.ActionGameOver?.Invoke();
-                        GameManager.Instance.GameOver(this.transform.position);
-                        GameObject g = transform.GetChild(0).gameObject;
-                        Animator animator_ = g.GetComponent<Animator>();
-                        animator_.SetBool("TimeToDie", true);
                         TimeToSpawnStairs = false;
                     }
                 }
@@ -79,35 +83,49 @@ public class Side : MonoBehaviour
                         g.transform.DOPunchScale(Vector3.one / 2, 0.25f, 2, 0.5f);
                         ShuffleManager.Instance.RemoveSuitcaseFromBottomVersion2(this);
 
-  
-
                         currentChild++;
                     }
                     else // no case remained
-                    {
+                    {                       
                         GameManager.ActionGameOver?.Invoke();
-                        GameManager.Instance.GameOver(this.transform.position);
-                        GameObject g = transform.GetChild(0).gameObject;
-                        Animator animator_ = g.GetComponent<Animator>();
-                        animator_.SetBool("TimeToDie",true);
                         TimeToSpawnStairs = false;
-
-
-
-
                     }
                 }
             }
-
-
 
             if (currentChild == currentParentStair.transform.childCount - 1)
             {
                 TimeToSpawnStairs = false;
                 StartCoroutine(FixPositionErrorRoutine());
-            }
+            }   
+        }
+    }
 
-        
+    private void ActivateRunAnim()
+    {
+        animator.SetTrigger("Run");
+    }
+
+    private void ActivateGameOverEffects()
+    {
+        if(TimeToSpawnStairs)// falling side
+        {
+            animator.SetTrigger("TimeToDie");
+
+            Vector3 particlePos = this.transform.position;
+            if (particlePos.x > 0)
+            {
+                particlePos.y += 2;
+            }
+            else
+            {
+                particlePos.y += 2;
+            }
+            Instantiate(cryParticle, particlePos, Quaternion.identity);
+        }
+        else// standing side
+        {
+            animator.SetTrigger("OthersFall");
         }
     }
 
@@ -153,5 +171,11 @@ public class Side : MonoBehaviour
         yield return new WaitForSeconds(0.5f);
         Instantiate(stairPrefabToSpawn, new Vector3(transform.position.x, -0.2f, transform.position.z), Quaternion.identity);
 
+    }
+
+    private void OnDisable()
+    {
+        GameManager.ActionGameStart -= ActivateRunAnim;
+        GameManager.ActionGameOver -= ActivateGameOverEffects;
     }
 }

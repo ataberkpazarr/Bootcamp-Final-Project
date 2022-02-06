@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 5353872769574952291}
   - component: {fileID: 8432046525166195746}
   - component: {fileID: 909835386527498724}
+  - component: {fileID: 2860090335040019568}
   m_Layer: 0
   m_Name: Side
   m_TagString: Untagged
@@ -60,6 +61,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   stairPrefabToSpawn: {fileID: 0}
+  animator: {fileID: 0}
+  cryParticle: {fileID: 0}
+  happyParticle: {fileID: 0}
 --- !u!54 &909835386527498724
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -76,6 +80,23 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 118
   m_CollisionDetection: 0
+--- !u!114 &2860090335040019568
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7338213679603054314}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2fa609235ebe949d98a76325c0ad291c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  stairPrefabToSpawn: {fileID: 0}
+  animator: {fileID: 2547131843663757284}
+  cryParticle: {fileID: 1899990265956452, guid: 0c1dddd83199e4b4cb7a66329a7b18c0,
+    type: 3}
+  happyParticle: {fileID: 180048, guid: 4a9bb31a555add44ba9d0dbc0c220e70, type: 3}
 --- !u!1001 &4379888722977072631
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -148,6 +169,12 @@ PrefabInstance:
 --- !u!4 &8482835829290706334 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 5292129409189118057, guid: d5ef48c1260ab4846aaee6d73a4824ec,
+    type: 3}
+  m_PrefabInstance: {fileID: 4379888722977072631}
+  m_PrefabAsset: {fileID: 0}
+--- !u!95 &2547131843663757284 stripped
+Animator:
+  m_CorrespondingSourceObject: {fileID: 2274677885260290579, guid: d5ef48c1260ab4846aaee6d73a4824ec,
     type: 3}
   m_PrefabInstance: {fileID: 4379888722977072631}
   m_PrefabAsset: {fileID: 0}

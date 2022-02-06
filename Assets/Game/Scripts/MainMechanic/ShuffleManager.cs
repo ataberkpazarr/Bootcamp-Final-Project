@@ -212,7 +212,7 @@ public class ShuffleManager : Singleton<ShuffleManager>
                 else
                 {
                     GameObject g = leftSideSuitcases[i].gameObject;
-                    g.transform.DOMoveY(leftSideSuitcasesRoot.transform.position.y+(i*0.3f), animationSpeed);
+                    g.transform.DOMoveY(leftSideSuitcasesRoot.transform.position.y+(i*SuitcaseDeltaPosY), animationSpeed);
 
                 }
 
@@ -231,7 +231,7 @@ public class ShuffleManager : Singleton<ShuffleManager>
                 else
                 {
                     GameObject g = rightSideSuitcases[i].gameObject;
-                    g.transform.DOMoveY(rightSideSuitcasesRoot.transform.position.y + (i * 0.3f), animationSpeed);
+                    g.transform.DOMoveY(rightSideSuitcasesRoot.transform.position.y + (i * SuitcaseDeltaPosY), animationSpeed);
 
                 }
 
@@ -313,7 +313,7 @@ public class ShuffleManager : Singleton<ShuffleManager>
     private void UpdateParabolaVertexPos()
     {
         int maxLength = Mathf.Max(leftSideSuitcases.Count, rightSideSuitcases.Count);
-        float newPosY = maxLength * SuitcaseDeltaPosY + 2f;
+        float newPosY = maxLength * SuitcaseDeltaPosY + 2.5f;
         Vector3 newParabolaVertex = tweenParabolaVertex.position;
         newParabolaVertex.y = newPosY;
         tweenParabolaVertex.position = newParabolaVertex;
