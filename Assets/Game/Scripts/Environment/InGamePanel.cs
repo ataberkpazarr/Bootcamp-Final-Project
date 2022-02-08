@@ -9,6 +9,10 @@ public class InGamePanel : Singleton<InGamePanel>
     [SerializeField] private GameObject MoneyImagePos;
     [SerializeField] private GameObject moneyPrefab;
     [SerializeField] private GameObject moneyAnimStartingPoint;
+    [SerializeField] private GameObject moneyCollectAnim;
+    [SerializeField] private GameObject moneyCollectParticle;
+
+
 
     Vector3 moneyAnimStartingPoint_;
 
@@ -30,24 +34,42 @@ public class InGamePanel : Singleton<InGamePanel>
         timerPanel.SetActive(false);
     }
 
-    public void CollectCoinAnimation(Vector3 currentPos)
+    public void DoCollectCoinAnimation(Vector3 currentPos)
     {
         /*
-        GameObject g =Instantiate(moneyPrefab,moneyAnimStartingPoint_,Quaternion.identity);
+        Vector3 worldPosStartingPoint = Camera.main.ScreenToWorldPoint(currentPos);
+        GameObject g =Instantiate(moneyPrefab, currentPos, Quaternion.identity);
         RectTransform rec = MoneyImagePos.GetComponent<RectTransform>();
-        g.transform.DOMove(rec.position,3f);
+        //Vector3 worldPosTarget = Camera.main.ScreenToWorldPoint(MoneyImagePos.transform.position);
+        Vector3 worldPosTarget = Camera.main.ScreenToWorldPoint(rec.position);
+
+        //g.transform.DOMove(worldPosTarget, 3f);
+        g.transform.DOMove(rec.position, 3f);
         */
+        StartCoroutine(MoneyCollectRoutine());
+
     }
 
-    
+    private IEnumerator MoneyCollectRoutine()
+    {
+        moneyCollectAnim.SetActive(true);
+        yield return new WaitForSeconds(0.9f);
+        moneyCollectAnim.SetActive(false);
+        //RectTransform rec = MoneyImagePos.GetComponent<RectTransform>();
+        //Instantiate(moneyCollectParticle,rec.position+new Vector3(0,-2,0),Quaternion.identity);
+
+
+    }
+
+
 
     private void OnEnable()
     {
-        ShuffleManager.suitCasesAdded += CollectCoinAnimation;
+        ShuffleManager.suitCasesAdded += DoCollectCoinAnimation;
     }
 
     private void OnDisable()
     {
-        ShuffleManager.suitCasesAdded -= CollectCoinAnimation;
+        ShuffleManager.suitCasesAdded -= DoCollectCoinAnimation;
     }
 }

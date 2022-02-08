@@ -68,12 +68,56 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 19863200, guid: fac9ad46c0307484fba6960de846139d, type: 3}
+      propertyPath: looping
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 19863200, guid: fac9ad46c0307484fba6960de846139d, type: 3}
       propertyPath: lengthInSec
       value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 19863200, guid: fac9ad46c0307484fba6960de846139d, type: 3}
+      propertyPath: simulationSpeed
+      value: 0.6
+      objectReference: {fileID: 0}
+    - target: {fileID: 19863200, guid: fac9ad46c0307484fba6960de846139d, type: 3}
+      propertyPath: useUnscaledTime
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 19863200, guid: fac9ad46c0307484fba6960de846139d, type: 3}
+      propertyPath: InitialModule.startSpeed.scalar
+      value: 12
+      objectReference: {fileID: 0}
+    - target: {fileID: 19863200, guid: fac9ad46c0307484fba6960de846139d, type: 3}
       propertyPath: InitialModule.startLifetime.scalar
       value: 0.6
+      objectReference: {fileID: 0}
+    - target: {fileID: 19863200, guid: fac9ad46c0307484fba6960de846139d, type: 3}
+      propertyPath: InitialModule.startLifetime.minScalar
+      value: 0.0001
+      objectReference: {fileID: 0}
+    - target: {fileID: 19863200, guid: fac9ad46c0307484fba6960de846139d, type: 3}
+      propertyPath: EmissionModule.m_Bursts.Array.data[0].time
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 19863200, guid: fac9ad46c0307484fba6960de846139d, type: 3}
+      propertyPath: EmissionModule.m_Bursts.Array.data[0].cycleCount
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 19863200, guid: fac9ad46c0307484fba6960de846139d, type: 3}
+      propertyPath: EmissionModule.m_Bursts.Array.data[0].repeatInterval
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 19863200, guid: fac9ad46c0307484fba6960de846139d, type: 3}
+      propertyPath: EmissionModule.m_Bursts.Array.data[0].countCurve.scalar
+      value: 200
+      objectReference: {fileID: 0}
+    - target: {fileID: 19950022, guid: fac9ad46c0307484fba6960de846139d, type: 3}
+      propertyPath: m_LengthScale
+      value: 0.1
+      objectReference: {fileID: 0}
+    - target: {fileID: 19950022, guid: fac9ad46c0307484fba6960de846139d, type: 3}
+      propertyPath: m_VelocityScale
+      value: 0.05
       objectReference: {fileID: 0}
     - target: {fileID: 19964082, guid: fac9ad46c0307484fba6960de846139d, type: 3}
       propertyPath: m_Materials.Array.size
