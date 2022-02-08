@@ -1,13 +1,20 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
+
 
 [SelectionBase]
 public class Bomb : MonoBehaviour
 {
+    [SerializeField] private GameObject explosionParticle;
+    [SerializeField] private GameObject timerPanel;
     [Header("Specs")]
     [SerializeField] private float explosionTime = 3f;
     [SerializeField] private float explosionRange = 1f;
+    
+
+
 
 
     private void OnDrawGizmos()
@@ -19,6 +26,10 @@ public class Bomb : MonoBehaviour
     private void Start()
     {
         StartCoroutine(Explode());
+        //TimerPanel.Instance.ActivateTimer();
+        InGamePanel.Instance.ActivateTimer();
+        Timer.Instance.Begin();
+
     }
 
     private IEnumerator Explode()
@@ -36,5 +47,7 @@ public class Bomb : MonoBehaviour
         }
 
         ShuffleManager.Instance.HandleWithBombExplosion(nearbySuitcases, gameObject);
+        Instantiate(explosionParticle,this.transform.position, Quaternion.identity);
+
     }
 }

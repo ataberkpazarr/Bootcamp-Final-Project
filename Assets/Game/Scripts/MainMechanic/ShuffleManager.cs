@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using DG.Tweening;
 using System.Linq;
+using System;
 
 public class ShuffleManager : Singleton<ShuffleManager>
 {
@@ -22,6 +23,8 @@ public class ShuffleManager : Singleton<ShuffleManager>
     [SerializeField] private GameObject suitcaseItself;
 
     //[SerializeField] private RightSide sideRight;
+
+    public static Action<Vector3> suitCasesAdded;
 
     private bool isDragStopoped;
     private bool isLeftDragStopped;
@@ -361,6 +364,13 @@ public class ShuffleManager : Singleton<ShuffleManager>
                 //animation
                 newSuitcase.transform.DOPunchScale(Vector3.one / 2, 0.25f, 2, 0.5f);
             }
+
+            suitCasesAdded.Invoke(leftSideSuitcases.Last().transform.position);
+            /*
+            GameObject lastAdded = leftSideSuitcases.Last();
+            RectTransform rec = lastAdded.GetComponent<RectTransform>();
+            suitCasesAdded.Invoke(rec.position);
+            */
         }
         else// right side
         {
@@ -399,6 +409,14 @@ public class ShuffleManager : Singleton<ShuffleManager>
                 //animation
                 newSuitcase.transform.DOPunchScale(Vector3.one / 2, 0.25f, 2, 0.5f);
             }
+            /*
+            GameObject lastAdded = rightSideSuitcases.Last();
+            RectTransform rec = lastAdded.GetComponent<RectTransform>();
+            suitCasesAdded.Invoke(rec.position);
+            */
+
+            suitCasesAdded.Invoke(rightSideSuitcases.Last().transform.position);
+
         }
 
         MoneyManager.Instance.UpdateMoney(CurrentSuitcaseAmount);
@@ -564,7 +582,7 @@ public class ShuffleManager : Singleton<ShuffleManager>
         else if (explosionPosX > 0)
             rightSideSuitcases.Remove(bombItself);
         Destroy(bombItself);
-
+        InGamePanel.Instance.DeactivateTimer();
         // handle with remaining suitcases (candy crush effect)
         // patlamayan çantaları topla
         List<GameObject> unexplodedSuitcasesOnTop = new List<GameObject>();

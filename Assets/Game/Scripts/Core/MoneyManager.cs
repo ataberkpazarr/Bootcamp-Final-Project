@@ -3,6 +3,8 @@ using UnityEngine;
 public class MoneyManager : Singleton<MoneyManager>
 {
     [SerializeField] private int earnPerSuitcase = 1000;
+    [SerializeField] private GameObject moneyPrefab;
+
     private int _currentEarning;
     public int CurrentEarning => _currentEarning;
 
