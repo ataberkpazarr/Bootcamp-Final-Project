@@ -10,6 +10,9 @@ public class GameManager : Singleton<GameManager>
     private bool _isGameStarted;
     public bool IsGameStarted => _isGameStarted;
 
+    [SerializeField] private Transform platform;
+    public float PlatformLenght => platform.localScale.z;
+
     private void OnEnable()
     {
         ActionGameStart += StartTheGame;
@@ -38,6 +41,12 @@ public class GameManager : Singleton<GameManager>
     private void StartTheGame()
     {
         _isGameStarted = true;
+    }
+
+    public void CalculateTheProgress(float playerPosZ)
+    {
+        float currentProgress = playerPosZ / PlatformLenght;
+        CanvasController.Instance.UpdateProgressBar(currentProgress);
     }
 
     private void OnDisable()

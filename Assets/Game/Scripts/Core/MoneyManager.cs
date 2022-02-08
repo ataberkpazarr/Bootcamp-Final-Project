@@ -21,12 +21,13 @@ public class MoneyManager : Singleton<MoneyManager>
     public void UpdateMoney(int amount)
     {
         _currentEarning = amount * earnPerSuitcase;
-        CanvasController.Instance.UpdateMoneyText(CurrentEarning);
+        //CanvasController.Instance.UpdateMoneyText(CurrentEarning);
     }
 
     public void SaveMoney()
     {
         // player prefs
+        PlayerPrefs.SetInt("MONEY", CurrentEarning);
     }
 
     private void OnDisable()

@@ -1,7 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
 
 
 [SelectionBase]
@@ -13,9 +12,6 @@ public class Bomb : MonoBehaviour
     [SerializeField] private float explosionTime = 3f;
     [SerializeField] private float explosionRange = 1f;
     
-
-
-
 
     private void OnDrawGizmos()
     {

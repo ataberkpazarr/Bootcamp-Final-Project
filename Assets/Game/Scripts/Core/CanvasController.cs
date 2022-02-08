@@ -6,11 +6,18 @@ public class CanvasController : Singleton<CanvasController>
 {
     [SerializeField] private GameObject panelMenu, panelInGame, panelEndGame, panelGameOver;
     [SerializeField] private TextMeshProUGUI moneyText;
+    [SerializeField] private Image imageProgressBar;
 
     private void OnEnable()
     {
         GameManager.ActionGameStart += SetInGameUI;
         GameManager.ActionGameOver += SetGameOverUI;
+    }
+
+    private void Start()
+    {
+        int currentTotalMoney = PlayerPrefs.GetInt("MONEY", 0);
+        UpdateMoneyText(currentTotalMoney);
     }
 
     private void SetInGameUI()
@@ -51,6 +58,11 @@ public class CanvasController : Singleton<CanvasController>
     public void UpdateMoneyText(int amount)
     {
         moneyText.text = amount.ToString();
+    }
+
+    public void UpdateProgressBar(float value)
+    {
+        imageProgressBar.fillAmount = value;
     }
 
     private void OnDisable()
