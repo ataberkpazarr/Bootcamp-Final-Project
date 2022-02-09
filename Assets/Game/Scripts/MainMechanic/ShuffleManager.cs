@@ -108,6 +108,15 @@ public class ShuffleManager : Singleton<ShuffleManager>
         return leftSideSuitcases.Count;
     }
 
+    public List<GameObject> GetAllLeftCases()
+    {
+        return leftSideSuitcases;
+    }
+
+    public List<GameObject> GetAllRightCases()
+    {
+        return rightSideSuitcases;
+    }
     private void LetItDoStair(Side side)
     {
         timeForStair = true;

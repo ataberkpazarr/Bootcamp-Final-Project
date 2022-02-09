@@ -14,6 +14,7 @@ public class PlayerController : MonoBehaviour
     // inputs
     private Vector3 mouseRootPos;
     private float input;
+    private bool isLevelDone = false;
 
     private void OnEnable()
     {
@@ -21,6 +22,7 @@ public class PlayerController : MonoBehaviour
         //SwipeManager.leftSwiped += HandleLeftSlide;
         GameManager.ActionGameStart += ActivateRunAnim;
         GameManager.ActionGameOver += DeactivateThis;
+        FinishLineTrigger.FinishLineTriggered += StopMovement;
     }
 
     void Update()
@@ -34,8 +36,12 @@ public class PlayerController : MonoBehaviour
 
     private void MoveForward()
     {
-        transform.Translate(Vector3.forward * speed * Time.deltaTime);
-        GameManager.Instance.CalculateTheProgress(transform.position.z);
+        if (!isLevelDone)
+        {
+            transform.Translate(Vector3.forward * speed * Time.deltaTime);
+            GameManager.Instance.CalculateTheProgress(transform.position.z);
+        }
+       
         //transform.DOMove(transform.position+transform.forward,1f);
     }
 
@@ -43,6 +49,14 @@ public class PlayerController : MonoBehaviour
     {
         leftSideAnim.SetTrigger("Run");
         rightSideAnim.SetTrigger("Run");
+    }
+
+    private void StopMovement()
+    {
+
+        isLevelDone = true;
+        leftSideAnim.SetTrigger("OthersFall");
+        rightSideAnim.SetTrigger("OthersFall");
     }
 
     private void DeactivateThis()
@@ -56,6 +70,8 @@ public class PlayerController : MonoBehaviour
         //SwipeManager.leftSwiped -= HandleLeftSlide;
         GameManager.ActionGameStart -= ActivateRunAnim;
         GameManager.ActionGameOver -= DeactivateThis;
+        FinishLineTrigger.FinishLineTriggered -= StopMovement;
+
     }
 
     private void HandleRightSlide()

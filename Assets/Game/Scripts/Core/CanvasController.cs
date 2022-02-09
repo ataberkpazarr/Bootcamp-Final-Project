@@ -1,12 +1,18 @@
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
-
+using System;
+using System.Collections;
+using System.Collections.Generic;
 public class CanvasController : Singleton<CanvasController>
 {
     [SerializeField] private GameObject panelMenu, panelInGame, panelEndGame, panelGameOver;
     [SerializeField] private TextMeshProUGUI moneyText;
+    [SerializeField] private TextMeshProUGUI levelText;
+
     [SerializeField] private Image imageProgressBar;
+    [SerializeField] private GameObject progressBar;
+
 
     private void OnEnable()
     {
@@ -63,6 +69,20 @@ public class CanvasController : Singleton<CanvasController>
     public void UpdateProgressBar(float value)
     {
         imageProgressBar.fillAmount = value;
+    }
+
+    public void DisableProgressBar()
+    {
+
+        StartCoroutine(DisableProgressBarRoutine());
+    }
+
+    private IEnumerator DisableProgressBarRoutine()
+    {
+        yield return new WaitForSeconds(0.4f);
+        progressBar.gameObject.SetActive(false);
+        yield return new WaitForSeconds(0.4f);
+        levelText.gameObject.SetActive(false);
     }
 
     private void OnDisable()
