@@ -13,24 +13,18 @@ public class GameManager : Singleton<GameManager>
     public bool IsGameStarted => _isGameStarted;
 
     [SerializeField] private Transform platform;
+    public float PlatformLenght => platform.localScale.z;
     [SerializeField] private Transform finishPlatformStartingPos;
-
+    [Header("Mini Game")]
     [SerializeField] private GameObject PlayersSeated;
     [SerializeField] private GameObject Stack;
     [SerializeField] private GameObject planor;
     [SerializeField] private GameObject confetti1;
     [SerializeField] private GameObject confetti2;
 
-
-
-
     List<GameObject> FinalStackList;
     float lastPos;
     float targetPos;
-
-
-
-    public float PlatformLenght => platform.localScale.z;
 
     private void OnEnable()
     {
@@ -108,6 +102,7 @@ public class GameManager : Singleton<GameManager>
         CanvasController.Instance.UpdateProgressBar(currentProgress);
     }
 
+    #region Mini Game
     private void StartMiniGame()
     {
         FinalStackList = new List<GameObject>();
@@ -115,7 +110,7 @@ public class GameManager : Singleton<GameManager>
         List<GameObject> rightSuitCases=ShuffleManager.Instance.GetAllRightCases();
         Sequence seq = DOTween.Sequence();
 
-        for (int i = leftSuitCases.Count-1; i >-1; i--)
+        for (int i = leftSuitCases.Count-1; i > -1; i--)
         {
             /*
             if (i==leftSuitCases.Count)
@@ -131,8 +126,8 @@ public class GameManager : Singleton<GameManager>
 
             GameObject g = leftSuitCases[i].gameObject;
 
-            seq.Append(g.transform.DOMove(Stack.transform.position + new Vector3(0, FinalStackList.Count * 0.3f, 0), 0.25f));
-            seq.Join(planor.transform.DOMoveY(planor.transform.position.y + 0.3f*FinalStackList.Count, 0.25f));
+            seq.Append(g.transform.DOMove(Stack.transform.position + new Vector3(0, FinalStackList.Count * 0.3f, 0), 0.1f));
+            seq.Join(planor.transform.DOMoveY(planor.transform.position.y + 0.3f*FinalStackList.Count, 0.1f));
             FinalStackList.Add(g);
             //leftSuitCases.RemoveAt(i);
             
@@ -141,8 +136,8 @@ public class GameManager : Singleton<GameManager>
         {
             GameObject g = rightSuitCases[i].gameObject;
 
-            seq.Append(g.transform.DOMove(Stack.transform.position + new Vector3(0, FinalStackList.Count * 0.3f, 0), 0.25f));
-            seq.Join(planor.transform.DOMoveY(planor.transform.position.y + 0.3f * FinalStackList.Count, 0.25f));
+            seq.Append(g.transform.DOMove(Stack.transform.position + new Vector3(0, FinalStackList.Count * 0.3f, 0), 0.1f));
+            seq.Join(planor.transform.DOMoveY(planor.transform.position.y + 0.3f * FinalStackList.Count, 0.1f));
             FinalStackList.Add(g);
 
         }
@@ -165,11 +160,6 @@ public class GameManager : Singleton<GameManager>
         }
         //planor.transform.DOMoveZ(planor.transform.position.z+14,1f);
         planor.transform.DOMoveZ(finishPlatformStartingPos.position.z, 1f).OnComplete(()=>ContinueMiniGame());
- 
-
-        
- 
-
     }
 
     private void ContinueMiniGame()
@@ -213,8 +203,8 @@ public class GameManager : Singleton<GameManager>
         Planor.Instance.StopMovement();
 
     }
+    #endregion
 
-  
     private void OnDisable()
     {
         ActionGameStart -= StartTheGame;

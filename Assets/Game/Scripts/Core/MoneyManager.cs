@@ -27,7 +27,11 @@ public class MoneyManager : Singleton<MoneyManager>
     public void SaveMoney()
     {
         // player prefs
-        PlayerPrefs.SetInt("MONEY", CurrentEarning);
+        int moneySoFar = PlayerPrefs.GetInt("MONEY", 0);
+        moneySoFar += CurrentEarning;
+        PlayerPrefs.SetInt("MONEY", moneySoFar);
+        // update ui
+        CanvasController.Instance.UpdateMoneyText(moneySoFar);
     }
 
     private void OnDisable()

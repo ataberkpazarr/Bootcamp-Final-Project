@@ -225,6 +225,41 @@ PrefabInstance:
       propertyPath: m_Name
       value: AR_Suitcase_Money_Altered
       objectReference: {fileID: 0}
+    - target: {fileID: 4347337985944606282, guid: be67e2cfeb32a4c81bacd5078639c59d,
+        type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 18871b33c8d384f038a113d2e248ec01, type: 2}
+    - target: {fileID: 4347337985944606282, guid: be67e2cfeb32a4c81bacd5078639c59d,
+        type: 3}
+      propertyPath: m_Materials.Array.data[1]
+      value: 
+      objectReference: {fileID: 2100000, guid: 18871b33c8d384f038a113d2e248ec01, type: 2}
+    - target: {fileID: 4347337985944606282, guid: be67e2cfeb32a4c81bacd5078639c59d,
+        type: 3}
+      propertyPath: m_Materials.Array.data[2]
+      value: 
+      objectReference: {fileID: 2100000, guid: 18871b33c8d384f038a113d2e248ec01, type: 2}
+    - target: {fileID: 4347337985944606282, guid: be67e2cfeb32a4c81bacd5078639c59d,
+        type: 3}
+      propertyPath: m_Materials.Array.data[3]
+      value: 
+      objectReference: {fileID: 2100000, guid: 18871b33c8d384f038a113d2e248ec01, type: 2}
+    - target: {fileID: 4347337985944606282, guid: be67e2cfeb32a4c81bacd5078639c59d,
+        type: 3}
+      propertyPath: m_Materials.Array.data[4]
+      value: 
+      objectReference: {fileID: 2100000, guid: 18871b33c8d384f038a113d2e248ec01, type: 2}
+    - target: {fileID: 4347337985944606282, guid: be67e2cfeb32a4c81bacd5078639c59d,
+        type: 3}
+      propertyPath: m_Materials.Array.data[5]
+      value: 
+      objectReference: {fileID: 2100000, guid: 18871b33c8d384f038a113d2e248ec01, type: 2}
+    - target: {fileID: 7888882566627452314, guid: be67e2cfeb32a4c81bacd5078639c59d,
+        type: 3}
+      propertyPath: m_ReceiveShadows
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: be67e2cfeb32a4c81bacd5078639c59d, type: 3}
 --- !u!4 &7213284416432457563 stripped

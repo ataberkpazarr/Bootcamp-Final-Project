@@ -58,6 +58,7 @@ public class ShuffleManager : Singleton<ShuffleManager>
     {
         UpdateParabolaVertexPos();
         MoneyManager.Instance.UpdateMoney(CurrentSuitcaseAmount);
+        CanvasController.Instance.UpdateCaseAmountIndicators(leftSideSuitcases.Count, rightSideSuitcases.Count);
     }
 
     private void OnDisable()
@@ -172,10 +173,10 @@ public class ShuffleManager : Singleton<ShuffleManager>
 
             rightSideSuitcases.Add(currentShufflingObject);
             currentShufflingObject.transform.SetParent(rightSideSuitcasesRoot.transform.parent);// parent'ı Side objesi oldu(bomba olayında gerekliydi)
+            CanvasController.Instance.UpdateCaseAmountIndicators(leftSideSuitcases.Count, rightSideSuitcases.Count);
 
 
 
-            
             if (timeForStair)
             {
 
@@ -300,7 +301,8 @@ public class ShuffleManager : Singleton<ShuffleManager>
 
             leftSideSuitcases.Add(currentShufflingObject);
             currentShufflingObject.transform.SetParent(leftSideSuitcasesRoot.transform.parent);
- 
+            CanvasController.Instance.UpdateCaseAmountIndicators(leftSideSuitcases.Count, rightSideSuitcases.Count);
+
             if (timeForStair)
             {
                 rightPrabolaSeq.Play().OnComplete(MoveFromRightToLeft).OnStepComplete(() => FixPosition(currentShufflingObject, leftSideSuitcases));
@@ -429,6 +431,7 @@ public class ShuffleManager : Singleton<ShuffleManager>
         }
 
         MoneyManager.Instance.UpdateMoney(CurrentSuitcaseAmount);
+        CanvasController.Instance.UpdateCaseAmountIndicators(leftSideSuitcases.Count, rightSideSuitcases.Count);
     }
 
     public void RemoveSuitcase(Side side, int suitcaseAmount)
@@ -457,6 +460,7 @@ public class ShuffleManager : Singleton<ShuffleManager>
         }
 
         MoneyManager.Instance.UpdateMoney(CurrentSuitcaseAmount);
+        CanvasController.Instance.UpdateCaseAmountIndicators(leftSideSuitcases.Count, rightSideSuitcases.Count);
     }
 
 
@@ -492,8 +496,9 @@ public class ShuffleManager : Singleton<ShuffleManager>
             FixPossiblePositionErrorsAfterBridge(side);
 
         }
-        MoneyManager.Instance.UpdateMoney(CurrentSuitcaseAmount);
 
+        MoneyManager.Instance.UpdateMoney(CurrentSuitcaseAmount);
+        CanvasController.Instance.UpdateCaseAmountIndicators(leftSideSuitcases.Count, rightSideSuitcases.Count);
     }
 
 
@@ -662,6 +667,7 @@ public class ShuffleManager : Singleton<ShuffleManager>
             StartCoroutine(RefreshPositions(rightSideSuitcases, 0.5f));
 
         MoneyManager.Instance.UpdateMoney(CurrentSuitcaseAmount);
+        CanvasController.Instance.UpdateCaseAmountIndicators(leftSideSuitcases.Count, rightSideSuitcases.Count);
     }
     #endregion
 

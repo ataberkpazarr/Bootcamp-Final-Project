@@ -7,8 +7,7 @@ using System.Collections.Generic;
 public class CanvasController : Singleton<CanvasController>
 {
     [SerializeField] private GameObject panelMenu, panelInGame, panelEndGame, panelGameOver;
-    [SerializeField] private TextMeshProUGUI moneyText;
-    [SerializeField] private TextMeshProUGUI levelText;
+    [SerializeField] private TextMeshProUGUI textMoney, textLevel, textLeftCaseAmount, textRightCaseAmount;
 
     [SerializeField] private Image imageProgressBar;
     [SerializeField] private GameObject progressBar;
@@ -29,6 +28,12 @@ public class CanvasController : Singleton<CanvasController>
     private void SetInGameUI()
     {
         panelMenu.SetActive(false);
+        StartCoroutine(SetInGameRoutine());
+    }
+    private IEnumerator SetInGameRoutine()
+    {
+        yield return new WaitForSeconds(1f);// kamera geçişini bekle
+
         panelInGame.SetActive(true);
     }
 
@@ -63,12 +68,18 @@ public class CanvasController : Singleton<CanvasController>
 
     public void UpdateMoneyText(int amount)
     {
-        moneyText.text = amount.ToString();
+        textMoney.text = amount.ToString();
     }
 
     public void UpdateProgressBar(float value)
     {
         imageProgressBar.fillAmount = value;
+    }
+
+    public void UpdateCaseAmountIndicators(int leftCount, int rightCount)
+    {
+        textLeftCaseAmount.text = leftCount.ToString();
+        textRightCaseAmount.text = rightCount.ToString();
     }
 
     public void DisableProgressBar()
@@ -82,7 +93,7 @@ public class CanvasController : Singleton<CanvasController>
         yield return new WaitForSeconds(0.4f);
         progressBar.gameObject.SetActive(false);
         yield return new WaitForSeconds(0.4f);
-        levelText.gameObject.SetActive(false);
+        textLevel.gameObject.SetActive(false);
     }
 
     private void OnDisable()

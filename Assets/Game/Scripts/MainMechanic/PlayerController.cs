@@ -36,12 +36,9 @@ public class PlayerController : MonoBehaviour
 
     private void MoveForward()
     {
-        if (!isLevelDone)
-        {
-            transform.Translate(Vector3.forward * speed * Time.deltaTime);
-            GameManager.Instance.CalculateTheProgress(transform.position.z);
-        }
-       
+        transform.Translate(Vector3.forward * speed * Time.deltaTime);
+        GameManager.Instance.CalculateTheProgress(transform.position.z);
+
         //transform.DOMove(transform.position+transform.forward,1f);
     }
 
@@ -52,11 +49,10 @@ public class PlayerController : MonoBehaviour
     }
 
     private void StopMovement()
-    {
-
-        isLevelDone = true;
+    {        
         leftSideAnim.SetTrigger("OthersFall");
         rightSideAnim.SetTrigger("OthersFall");
+        DeactivateThis();
     }
 
     private void DeactivateThis()
