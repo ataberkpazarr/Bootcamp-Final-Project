@@ -74,8 +74,8 @@ public class GameManager : Singleton<GameManager>
             else if (FinalStackList.Count<=0)
             {
                 timeToMove = false;
-                confetti1.SetActive(true);
-                confetti2.SetActive(true);
+                //confetti1.SetActive(true);
+                //confetti2.SetActive(true);
 
             }
         }
@@ -173,7 +173,7 @@ public class GameManager : Singleton<GameManager>
         timeToMove = true;
         float lastPos = planor.transform.position.z;
         float targetPos = planor.transform.position.z + 1.2f;
-        planor.transform.DOMoveZ(planor.transform.position.z + FinalStackList.Count*1.3f, 5f);
+        planor.transform.DOMoveZ(planor.transform.position.z + FinalStackList.Count*1.3f, 5f).OnComplete(()=>CameraController.Instance.SetConfettiCamera());
 
         
         //while (FinalStackList.Count > 0)

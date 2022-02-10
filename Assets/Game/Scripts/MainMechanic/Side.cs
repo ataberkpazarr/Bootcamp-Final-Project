@@ -77,7 +77,7 @@ public class Side : MonoBehaviour
                 {
                     if (ShuffleManager.Instance.GetTotalAmountOfRightCases() > 0)
                     {
-                        nextTargetPos = transform.position + new Vector3(0, 0, 1.3f);
+                        nextTargetPos = transform.position + new Vector3(0, 0, 1.05f); //1.3 tü
                         GameObject g = currentParentStair.transform.GetChild(currentChild).gameObject;
                         g.SetActive(true);
                         g.transform.DOPunchScale(Vector3.one / 2, 0.25f, 2, 0.5f);
@@ -159,7 +159,7 @@ public class Side : MonoBehaviour
             TimeToSpawnStairs = true;
             nextTargetPos = transform.position + new Vector3(0, 0, 1.5f);
             currentParentStair = other.gameObject;
-            currentChild=1;
+            currentChild=0;
             TimeForStair.Invoke(this);
 
         }

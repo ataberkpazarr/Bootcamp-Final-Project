@@ -5,7 +5,9 @@ using UnityEngine;
 
 public class CameraController : Singleton<CameraController>
 {
-    [SerializeField] private CinemachineVirtualCamera cmMenu, cmInGame,cmMiniGame;
+    [SerializeField] private CinemachineVirtualCamera cmMenu, cmInGame,cmMiniGame, cmConfetti;
+    [SerializeField] private GameObject confetti1, confetti2;
+
 
     private void OnEnable()
     {
@@ -24,6 +26,15 @@ public class CameraController : Singleton<CameraController>
         cmInGame.enabled = false;
         cmMiniGame.enabled = true;
         */
+    }
+
+    public void SetConfettiCamera()
+    {
+        cmMiniGame.enabled = false;
+
+        cmConfetti.enabled = true;
+        confetti1.SetActive(true);
+        confetti2.SetActive(true);
     }
 
     public void SetMiniGameCam()
