@@ -148,11 +148,39 @@ public class Side : MonoBehaviour
                 return;
             }
 
-            int amount = int.Parse(other.name);
-            if (amount > 0)
-                ShuffleManager.Instance.AddSuitcase(this, amount);
+            char process = other.name[0];
+            int resultToAdd = 0;
+            int amount = int.Parse(other.name.Substring(1, other.name.Length-1));
+
+            if(transform.position.x < 0) // left
+            {
+                if (process == '*' && ShuffleManager.Instance.GetTotalAmountOfLeftCases() > 0)
+                {
+                    resultToAdd = ShuffleManager.Instance.GetTotalAmountOfLeftCases() * amount;
+                }
+                else
+                {
+                    resultToAdd += amount;
+                }
+
+            }
             else
-                ShuffleManager.Instance.RemoveSuitcase(this, -amount);
+            {
+                if (process == '*' && ShuffleManager.Instance.GetTotalAmountOfRightCases() > 0)
+                {
+                    resultToAdd = ShuffleManager.Instance.GetTotalAmountOfRightCases() * amount;
+                }
+                else
+                {
+                    resultToAdd += amount;
+                }
+
+            }
+            
+            if (amount > 0)
+                ShuffleManager.Instance.AddSuitcase(this, resultToAdd);
+            else
+                ShuffleManager.Instance.RemoveSuitcase(this, -resultToAdd);
         }
         else if (other.CompareTag("Stair"))
         {

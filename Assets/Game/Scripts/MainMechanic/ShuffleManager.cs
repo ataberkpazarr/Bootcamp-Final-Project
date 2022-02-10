@@ -198,7 +198,7 @@ public class ShuffleManager : Singleton<ShuffleManager>
 
     private void FixPosition(GameObject newlyAddedCase,List<GameObject> suitcases)
     {
-        if (suitcases.Last().transform.position.y - suitcases[suitcases.Count - 2].transform.position.y > 0.3f)
+        if (suitcases.Any() && suitcases.Last().transform.position.y - suitcases[suitcases.Count - 2].transform.position.y > 0.3f)
         {
             newlyAddedCase.transform.DOMoveY(newlyAddedCase.transform.position.y - 0.3f, animationSpeed / suitcases.Count);
         }
