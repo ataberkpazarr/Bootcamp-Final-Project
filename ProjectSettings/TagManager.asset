@@ -9,6 +9,8 @@ TagManager:
   - TimeToEndStairs
   - Stair
   - Gate
+  - FinishLine
+  - Multiplier
   layers:
   - Default
   - TransparentFX

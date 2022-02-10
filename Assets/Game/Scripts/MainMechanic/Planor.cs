@@ -5,9 +5,8 @@ using DG.Tweening;
 
 public class Planor : Singleton<Planor>
 {
-
     private bool timeToMove = false;
-
+    private int currentMultiplier;
     
     void Update()
     {
@@ -28,14 +27,20 @@ public class Planor : Singleton<Planor>
 
     public void StartMovement()
     {
-
         timeToMove = true;
     }
 
     public void StopMovement()
     {
-
         timeToMove = false;
+        MoneyManager.Instance.SaveMoney(currentMultiplier);
     }
 
+    private void OnTriggerEnter(Collider other)
+    {
+        if(other.CompareTag("Multiplier"))
+        {
+            currentMultiplier = int.Parse(other.name);
+        }
+    }
 }

@@ -16,6 +16,7 @@ public class CanvasController : Singleton<CanvasController>
     private void OnEnable()
     {
         GameManager.ActionGameStart += SetInGameUI;
+        GameManager.ActionArrivedMiniGame += SetMiniGameUI;
         GameManager.ActionGameOver += SetGameOverUI;
     }
 
@@ -37,11 +38,14 @@ public class CanvasController : Singleton<CanvasController>
         panelInGame.SetActive(true);
     }
 
-    private void SetGameOverUI()
+    private void SetMiniGameUI()
     {
         panelInGame.SetActive(false);
-        panelGameOver.SetActive(true);
+    }
 
+    private void SetGameOverUI()
+    {
+        panelGameOver.SetActive(true);
     }
 
     #region UI Buttons' Methods
@@ -99,6 +103,7 @@ public class CanvasController : Singleton<CanvasController>
     private void OnDisable()
     {
         GameManager.ActionGameStart -= SetInGameUI;
+        GameManager.ActionArrivedMiniGame -= SetMiniGameUI;
         GameManager.ActionGameOver -= SetGameOverUI;
     }
 }

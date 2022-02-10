@@ -7,7 +7,7 @@ using DG.Tweening;
 
 public class GameManager : Singleton<GameManager>
 {
-    public static UnityAction ActionGameStart, ActionGameOver, ActionLevelPassed;
+    public static UnityAction ActionGameStart, ActionGameOver, ActionLevelPassed, ActionArrivedMiniGame;
     private bool _isGameStarted;
     private bool timeToMove=false;
     public bool IsGameStarted => _isGameStarted;
@@ -141,7 +141,7 @@ public class GameManager : Singleton<GameManager>
             FinalStackList.Add(g);
 
         }
-        CanvasController.Instance.DisableProgressBar();
+        //CanvasController.Instance.DisableProgressBar();
 
         seq.Play().OnComplete(()=> CameraController.Instance.SetMiniGameCam()).OnStepComplete(()=>DoMiniGame());
 
@@ -173,7 +173,8 @@ public class GameManager : Singleton<GameManager>
         timeToMove = true;
         float lastPos = planor.transform.position.z;
         float targetPos = planor.transform.position.z + 1.2f;
-        planor.transform.DOMoveZ(planor.transform.position.z + FinalStackList.Count*1.3f, 5f).OnComplete(()=>CameraController.Instance.SetConfettiCamera());
+        planor.transform.DOMoveZ(planor.transform.position.z + FinalStackList.Count*1.3f, 5f).
+            OnComplete(()=> { CameraController.Instance.SetConfettiCamera(); Planor.Instance.StopMovement(); });
 
         
         //while (FinalStackList.Count > 0)
@@ -199,8 +200,6 @@ public class GameManager : Singleton<GameManager>
             }*/
 
         //}
-
-        Planor.Instance.StopMovement();
 
     }
     #endregion

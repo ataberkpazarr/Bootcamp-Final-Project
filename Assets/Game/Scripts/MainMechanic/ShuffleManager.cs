@@ -52,6 +52,7 @@ public class ShuffleManager : Singleton<ShuffleManager>
         SwipeManager.rightDragStopped += StopRightShuffle;
         Side.TimeForStair += LetItDoStair;
 
+        GameManager.ActionArrivedMiniGame += DeactivateThis;
     }
 
     private void Start()
@@ -70,6 +71,8 @@ public class ShuffleManager : Singleton<ShuffleManager>
         SwipeManager.leftDragStopped -= StopLeftShuffle;
         SwipeManager.rightDragStopped -= StopRightShuffle;
         Side.TimeForStair -= LetItDoStair;
+
+        GameManager.ActionArrivedMiniGame -= DeactivateThis;
     }
 
     private void StopShuffle()
@@ -681,5 +684,12 @@ public class ShuffleManager : Singleton<ShuffleManager>
             refreshedPos.y = leftSideSuitcasesRoot.transform.position.y + SuitcaseDeltaPosY * (i + 1);
             sideToRefresh[i].transform.position = refreshedPos;
         }
+    }
+
+    private void DeactivateThis()
+    {
+        isLeftDragStopped = true;
+        isRightDragStopped = true;
+        this.enabled = false;       
     }
 }

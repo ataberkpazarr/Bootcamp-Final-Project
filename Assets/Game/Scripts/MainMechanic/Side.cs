@@ -77,7 +77,7 @@ public class Side : MonoBehaviour
                 {
                     if (ShuffleManager.Instance.GetTotalAmountOfRightCases() > 0)
                     {
-                        nextTargetPos = transform.position + new Vector3(0, 0, 1.05f); //1.3 tü
+                        nextTargetPos = transform.position + new Vector3(0, 0, 1.05f); //1.3 t?
                         GameObject g = currentParentStair.transform.GetChild(currentChild).gameObject;
                         g.SetActive(true);
                         g.transform.DOPunchScale(Vector3.one / 2, 0.25f, 2, 0.5f);
@@ -144,6 +144,7 @@ public class Side : MonoBehaviour
             if (other.name == "BombGate")
             {
                 ShuffleManager.Instance.AddBomb(this, 1);
+                Destroy(other.gameObject);
                 return;
             }
 
@@ -153,15 +154,18 @@ public class Side : MonoBehaviour
             else
                 ShuffleManager.Instance.RemoveSuitcase(this, -amount);
         }
- 
-        else if (other.gameObject.CompareTag("Stair"))
+        else if (other.CompareTag("Stair"))
         {
             TimeToSpawnStairs = true;
             nextTargetPos = transform.position + new Vector3(0, 0, 1.5f);
             currentParentStair = other.gameObject;
             currentChild=0;
             TimeForStair.Invoke(this);
+        }
 
+        if(other.CompareTag("FinishLine"))// son trigger dan bir onceki
+        {
+            GameManager.ActionArrivedMiniGame?.Invoke();
         }
     }
 

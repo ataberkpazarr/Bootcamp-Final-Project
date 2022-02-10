@@ -22,6 +22,7 @@ public class SwipeManager : MonoBehaviour
     private void OnEnable()
     {
         GameManager.ActionGameOver += DeactivateThis;
+        GameManager.ActionArrivedMiniGame += DeactivateThis;
     }
 
     private void Update()
@@ -134,5 +135,6 @@ public class SwipeManager : MonoBehaviour
     private void OnDisable()
     {
         GameManager.ActionGameOver -= DeactivateThis;
+        GameManager.ActionArrivedMiniGame -= DeactivateThis;
     }
 }
