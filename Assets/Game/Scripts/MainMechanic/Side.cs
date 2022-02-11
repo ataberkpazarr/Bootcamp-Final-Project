@@ -144,43 +144,52 @@ public class Side : MonoBehaviour
             if (other.name == "BombGate")
             {
                 ShuffleManager.Instance.AddBomb(this, 1);
-                Destroy(other.gameObject);
                 return;
             }
 
+            #region Gate Processing
             char process = other.name[0];
             int resultToAdd = 0;
             int amount = int.Parse(other.name.Substring(1, other.name.Length-1));
 
             if(transform.position.x < 0) // left
             {
-                if (process == '*' && ShuffleManager.Instance.GetTotalAmountOfLeftCases() > 0)
+                switch(process)
                 {
-                    resultToAdd = ShuffleManager.Instance.GetTotalAmountOfLeftCases() * amount;
-                }
-                else// - ya da +
-                {
-                    resultToAdd += amount;
-                }
+                    case '*':
+                        int totalCount = ShuffleManager.Instance.GetTotalAmountOfLeftCases();
+                        resultToAdd = totalCount * (amount - 1);
+                        ShuffleManager.Instance.AddSuitcase(this, resultToAdd);
+                        break;
 
+                    default:// - ya da +
+                        if (amount > 0)
+                            ShuffleManager.Instance.AddSuitcase(this, amount);
+                        else
+                            ShuffleManager.Instance.RemoveSuitcase(this, -amount);
+                        break;
+                }
             }
             else
             {
-                if (process == '*' && ShuffleManager.Instance.GetTotalAmountOfRightCases() > 0)
+                switch (process)
                 {
-                    resultToAdd = ShuffleManager.Instance.GetTotalAmountOfRightCases() * amount;
-                }
-                else
-                {
-                    resultToAdd += amount;
+                    case '*':
+                        int totalCount = ShuffleManager.Instance.GetTotalAmountOfRightCases();
+                        resultToAdd = totalCount * (amount - 1);
+                        ShuffleManager.Instance.AddSuitcase(this, resultToAdd);
+                        break;
+
+                    default:// - ya da +
+                        if (amount > 0)
+                            ShuffleManager.Instance.AddSuitcase(this, amount);
+                        else
+                            ShuffleManager.Instance.RemoveSuitcase(this, -amount);
+                        break;
                 }
 
             }
-            
-            if (amount > 0)
-                ShuffleManager.Instance.AddSuitcase(this, resultToAdd);
-            else
-                ShuffleManager.Instance.RemoveSuitcase(this, -resultToAdd);
+            #endregion
         }
         else if (other.CompareTag("Stair"))
         {

@@ -18,6 +18,7 @@ public class CanvasController : Singleton<CanvasController>
         GameManager.ActionGameStart += SetInGameUI;
         GameManager.ActionArrivedMiniGame += SetMiniGameUI;
         GameManager.ActionGameOver += SetGameOverUI;
+        GameManager.ActionLevelPassed += SetEndGameUI;
     }
 
     private void Start()
@@ -46,6 +47,17 @@ public class CanvasController : Singleton<CanvasController>
     private void SetGameOverUI()
     {
         panelGameOver.SetActive(true);
+    }
+
+    private void SetEndGameUI()
+    {
+        StartCoroutine(SetEndGameRoutine());
+    }
+    private IEnumerator SetEndGameRoutine()
+    {
+        yield return new WaitForSeconds(1f);
+
+        panelEndGame.SetActive(true);
     }
 
     #region UI Buttons' Methods
@@ -105,5 +117,6 @@ public class CanvasController : Singleton<CanvasController>
         GameManager.ActionGameStart -= SetInGameUI;
         GameManager.ActionArrivedMiniGame -= SetMiniGameUI;
         GameManager.ActionGameOver -= SetGameOverUI;
+        GameManager.ActionLevelPassed -= SetEndGameUI;
     }
 }
