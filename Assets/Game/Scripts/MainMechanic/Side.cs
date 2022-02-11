@@ -77,7 +77,7 @@ public class Side : MonoBehaviour
                 {
                     if (ShuffleManager.Instance.GetTotalAmountOfRightCases() > 0)
                     {
-                        nextTargetPos = transform.position + new Vector3(0, 0, 1.05f); //1.3 t?
+                        nextTargetPos = transform.position + new Vector3(0, 0, 1.3f); //1.3 t?
                         GameObject g = currentParentStair.transform.GetChild(currentChild).gameObject;
                         g.SetActive(true);
                         g.transform.DOPunchScale(Vector3.one / 2, 0.25f, 2, 0.5f);
@@ -93,7 +93,7 @@ public class Side : MonoBehaviour
                 }
             }
 
-            if (currentChild == currentParentStair.transform.childCount - 1)
+            if (currentChild == currentParentStair.transform.childCount)
             {
                 TimeToSpawnStairs = false;
                 StartCoroutine(FixPositionErrorRoutine());
@@ -158,7 +158,7 @@ public class Side : MonoBehaviour
                 {
                     resultToAdd = ShuffleManager.Instance.GetTotalAmountOfLeftCases() * amount;
                 }
-                else
+                else// - ya da +
                 {
                     resultToAdd += amount;
                 }

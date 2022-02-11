@@ -219,18 +219,8 @@ public class ShuffleManager : Singleton<ShuffleManager>
             
             for (int i = 0; i < leftSideSuitcases.Count; i++)
             {
-                if (i==0)
-                {
-                    GameObject g = leftSideSuitcases[i].gameObject;
-                    g.transform.DOMoveY(leftSideSuitcasesRoot.transform.position.y,animationSpeed);
-
-                }
-                else
-                {
-                    GameObject g = leftSideSuitcases[i].gameObject;
-                    g.transform.DOMoveY(leftSideSuitcasesRoot.transform.position.y+(i*SuitcaseDeltaPosY), animationSpeed);
-
-                }
+                GameObject g = leftSideSuitcases[i].gameObject;
+                g.transform.DOMoveY(leftSideSuitcasesRoot.transform.position.y + ((i+1) * SuitcaseDeltaPosY), animationSpeed);
 
             }
         }
@@ -238,18 +228,8 @@ public class ShuffleManager : Singleton<ShuffleManager>
         {
             for (int i = 0; i < rightSideSuitcases.Count; i++)
             {
-                if (i == 0)
-                {
-                    GameObject g = rightSideSuitcases[i].gameObject;
-                    g.transform.DOMoveY(rightSideSuitcasesRoot.transform.position.y, animationSpeed);
-
-                }
-                else
-                {
-                    GameObject g = rightSideSuitcases[i].gameObject;
-                    g.transform.DOMoveY(rightSideSuitcasesRoot.transform.position.y + (i * SuitcaseDeltaPosY), animationSpeed);
-
-                }
+                GameObject g = rightSideSuitcases[i].gameObject;
+                g.transform.DOMoveY(rightSideSuitcasesRoot.transform.position.y + ((i+1) * SuitcaseDeltaPosY), animationSpeed);
 
             }
         }
@@ -477,7 +457,7 @@ public class ShuffleManager : Singleton<ShuffleManager>
             for (int i = 0; i < leftSideSuitcases.Count; i++)
             {
                 GameObject g = leftSideSuitcases[i];
-                g.transform.DOMoveY(g.transform.position.y - 0.3f, animationSpeed/ leftSideSuitcases.Count);
+                g.transform.DOMoveY(g.transform.position.y - 0.3f, animationSpeed / leftSideSuitcases.Count);
 
             }
 
@@ -492,7 +472,7 @@ public class ShuffleManager : Singleton<ShuffleManager>
             for (int i = 0; i < rightSideSuitcases.Count; i++)
             {
                 GameObject g = rightSideSuitcases[i];
-                g.transform.DOMoveY(g.transform.position.y - 0.3f, animationSpeed/rightSideSuitcases.Count);
+                g.transform.DOMoveY(g.transform.position.y - 0.3f, animationSpeed / rightSideSuitcases.Count);
 
             }
 
