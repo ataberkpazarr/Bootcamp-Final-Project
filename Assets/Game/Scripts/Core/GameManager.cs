@@ -83,7 +83,7 @@ public class GameManager : Singleton<GameManager>
 
     public void LoadNextLevel()
     {
-
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
     }
 
     public void RestartLevel()
@@ -174,7 +174,7 @@ public class GameManager : Singleton<GameManager>
         float lastPos = planor.transform.position.z;
         float targetPos = planor.transform.position.z + 1.2f;
         planor.transform.DOMoveZ(planor.transform.position.z + FinalStackList.Count*1.3f, 5f).
-            OnComplete(()=> { CameraController.Instance.SetConfettiCamera(); Planor.Instance.StopMovement(); });
+            OnComplete(()=> { CameraController.Instance.SetConfettiCamera(); Planor.Instance.StopMovement(); }).OnStepComplete(()=>StartCoroutine(LoadNextLevelRoutine()));
 
         
         //while (FinalStackList.Count > 0)
@@ -204,6 +204,13 @@ public class GameManager : Singleton<GameManager>
     }
     #endregion
 
+    private IEnumerator LoadNextLevelRoutine()
+    {
+        yield return new WaitForSeconds(4f);
+        LoadNextLevel();
+
+
+    }
     private void OnDisable()
     {
         ActionGameStart -= StartTheGame;
