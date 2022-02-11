@@ -162,12 +162,26 @@ public class Side : MonoBehaviour
                         ShuffleManager.Instance.AddSuitcase(this, resultToAdd);
                         break;
 
-                    default:// - ya da +
+                    case '+':
                         if (amount > 0)
                             ShuffleManager.Instance.AddSuitcase(this, amount);
-                        else
-                            ShuffleManager.Instance.RemoveSuitcase(this, -amount);
                         break;
+
+                    case '-':
+                        if (amount > 0)
+                        {
+                            ShuffleManager.Instance.RemoveSuitcase(this, amount);
+                        }
+                        break;
+
+                        /*
+                        default:// - ya da +
+                            if (amount > 0)
+                                ShuffleManager.Instance.AddSuitcase(this, amount);
+                            else
+                                ShuffleManager.Instance.RemoveSuitcase(this, amount);
+                            break;
+                        */
                 }
             }
             else
@@ -180,11 +194,16 @@ public class Side : MonoBehaviour
                         ShuffleManager.Instance.AddSuitcase(this, resultToAdd);
                         break;
 
-                    default:// - ya da +
+                    case '+':
                         if (amount > 0)
                             ShuffleManager.Instance.AddSuitcase(this, amount);
-                        else
-                            ShuffleManager.Instance.RemoveSuitcase(this, -amount);
+                        break;
+
+                    case '-':
+                        if (amount >0)
+                        {
+                            ShuffleManager.Instance.RemoveSuitcase(this, amount);
+                        }
                         break;
                 }
 
