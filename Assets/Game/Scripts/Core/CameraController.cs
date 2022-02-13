@@ -6,6 +6,7 @@ using UnityEngine;
 public class CameraController : Singleton<CameraController>
 {
     [SerializeField] private CinemachineVirtualCamera cmMenu, cmInGame,cmMiniGame, cmConfetti;
+    [SerializeField] private GameObject moneyCollectAnim;
     [SerializeField] private GameObject confetti1, confetti2;
 
 
@@ -35,8 +36,31 @@ public class CameraController : Singleton<CameraController>
         cmConfetti.enabled = true;
         confetti1.SetActive(true);
         confetti2.SetActive(true);
-    }
+        StartCoroutine(MoneyCollectRoutine());
 
+
+    }
+    private IEnumerator MoneyCollectRoutine()
+    {
+        moneyCollectAnim.SetActive(true);
+        yield return new WaitForSeconds(0.9f);
+        moneyCollectAnim.SetActive(false);
+
+        yield return new WaitForSeconds(0.9f);
+        moneyCollectAnim.SetActive(true);
+        yield return new WaitForSeconds(0.9f);
+        moneyCollectAnim.SetActive(false);
+        yield return new WaitForSeconds(0.9f);
+        moneyCollectAnim.SetActive(true);
+        yield return new WaitForSeconds(0.9f);
+        moneyCollectAnim.SetActive(false);
+
+
+        //RectTransform rec = MoneyImagePos.GetComponent<RectTransform>();
+        //Instantiate(moneyCollectParticle,rec.position+new Vector3(0,-2,0),Quaternion.identity);
+
+
+    }
     public void SetMiniGameCam()
     {
         

@@ -34,7 +34,8 @@ public class InGamePanel : Singleton<InGamePanel>
         timerPanel.SetActive(false);
     }
 
-    public void DoCollectCoinAnimation(Vector3 currentPos)
+    //public void DoCollectCoinAnimation(Vector3 currentPos)
+    public void DoCollectCoinAnimation()
     {
         /*
         Vector3 worldPosStartingPoint = Camera.main.ScreenToWorldPoint(currentPos);
@@ -55,6 +56,17 @@ public class InGamePanel : Singleton<InGamePanel>
         moneyCollectAnim.SetActive(true);
         yield return new WaitForSeconds(0.9f);
         moneyCollectAnim.SetActive(false);
+        
+        yield return new WaitForSeconds(0.9f);
+        moneyCollectAnim.SetActive(true);
+        yield return new WaitForSeconds(0.9f);
+        moneyCollectAnim.SetActive(false);
+        yield return new WaitForSeconds(0.9f);
+        moneyCollectAnim.SetActive(true);
+        yield return new WaitForSeconds(0.9f);
+        moneyCollectAnim.SetActive(false);
+        
+
         //RectTransform rec = MoneyImagePos.GetComponent<RectTransform>();
         //Instantiate(moneyCollectParticle,rec.position+new Vector3(0,-2,0),Quaternion.identity);
 
@@ -65,11 +77,11 @@ public class InGamePanel : Singleton<InGamePanel>
 
     private void OnEnable()
     {
-        ShuffleManager.suitCasesAdded += DoCollectCoinAnimation;
+        //ShuffleManager.suitCasesAdded += DoCollectCoinAnimation;
     }
 
     private void OnDisable()
     {
-        ShuffleManager.suitCasesAdded -= DoCollectCoinAnimation;
+        //ShuffleManager.suitCasesAdded -= DoCollectCoinAnimation;
     }
 }

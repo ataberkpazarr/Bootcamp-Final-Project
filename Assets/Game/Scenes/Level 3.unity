@@ -32333,6 +32333,7 @@ MonoBehaviour:
   cmInGame: {fileID: 403792634}
   cmMiniGame: {fileID: 679114314}
   cmConfetti: {fileID: 1430427609}
+  moneyCollectAnim: {fileID: 456718329}
   confetti1: {fileID: 560148298}
   confetti2: {fileID: 879432071}
 --- !u!1 &1925216918
